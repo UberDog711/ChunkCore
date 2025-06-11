@@ -1,0 +1,81 @@
+GIT COMMANDS CRASH COURSE - by Sigma Alpha Rizzler Lord The IIIV
+
+----------------------------------------------
+1) git init
+
+- Initializes a new Git repository in the current folder.
+- Git starts tracking your code.
+- Creates a hidden .git/ folder.
+- Use this when starting version control for a new project.
+
+----------------------------------------------
+2) git remote add origin <url>
+
+- Connects your local repository to a remote GitHub repo.
+- "origin" is the default nickname for the remote.
+- Replace <url> with your GitHub repository URL.
+
+Example:
+git remote add origin https://github.com/YourUsername/RepoName.git
+
+----------------------------------------------
+3) git add .
+
+- Stages all changes in the current folder and subfolders.
+- Prepares files to be committed (saved).
+- The dot means "all files".
+
+Alternative:
+git add filename.java (stages a specific file)
+
+----------------------------------------------
+4) git commit -m "your message"
+
+- Saves the staged changes to the repository's history.
+- The message should briefly describe the changes.
+- Commits are your save points.
+
+Example:
+git commit -m "Implemented player movement"
+
+----------------------------------------------
+5) git push origin main
+
+- Uploads your commits to GitHub.
+- "origin" refers to the remote server.
+- "main" is the branch name you're pushing to.
+
+Note:
+Some older repos use 'master' instead of 'main':
+git push origin master
+
+----------------------------------------------
+6) git pull origin main
+
+- Downloads updates from GitHub into your local repository.
+- Useful if you or others made changes on GitHub.
+- Keeps your local and remote repos in sync.
+
+----------------------------------------------
+7) git status
+
+- Shows the current state of your repository.
+- Shows which files are staged, unstaged, or untracked.
+- Always a good habit to check before committing.
+
+----------------------------------------------
+8) Common Flow Example
+
+cd your-project-folder
+git init
+git remote add origin <url>
+git add .
+git commit -m "Initial commit"
+git push origin main
+git status
+git pull origin main
+
+----------------------------------------------
+You're now fully equipped to use Git + GitHub like a pro!
+
+- Sigma Alpha Rizzler Lord The IIIV
