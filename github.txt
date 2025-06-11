@@ -76,6 +76,4 @@ git status
 git pull origin main
 
 ----------------------------------------------
-You're now fully equipped to use Git + GitHub like a pro!
 
-- Sigma Alpha Rizzler Lord The IIIV

@@ -90,3 +90,91 @@ public int add(int a, int b) {
 This method is public, returns an int, and takes two int parameters.
 
 ========================================================
+
+
+JAVA CRASH COURSE - OBJECTS & LISTS  
+by Sigma Alpha Rizzler Lord The IIIV
+
+----------------------------------------------
+1️⃣ OBJECTS
+
+- An object is an instance of a class.
+- A class is a blueprint. Objects are built from the blueprint.
+
+Example Class:
+public class Player {
+    String name;
+    int health;
+
+    public void printStatus() {
+        System.out.println(name + " has " + health + " health.");
+    }
+}
+
+Creating an Object:
+Player p1 = new Player();
+p1.name = "Sigma Alpha Rizzler Lord The IIIV";
+p1.health = 100;
+p1.printStatus();  // Output: Sigma Alpha Rizzler Lord The IIIV has 100 health.
+
+- Multiple objects can be created from one class.
+----------------------------------------------
+2️⃣ LISTS (ArrayList)
+
+- A list is a collection of elements.
+- ArrayList is a dynamic array that grows and shrinks.
+
+Import:
+import java.util.ArrayList;
+
+Creating a List:
+ArrayList<String> names = new ArrayList<>();
+
+Adding to List:
+names.add("James");
+names.add("Sigma");
+names.add("Lord");
+
+Accessing Elements:
+System.out.println(names.get(0));  // Output: James
+
+Looping Through List:
+for (String name : names) {
+    System.out.println(name);
+}
+
+----------------------------------------------
+3️⃣ LIST OF OBJECTS
+
+- You can store objects inside a list.
+
+Example:
+
+ArrayList<Player> players = new ArrayList<>();
+
+Player p1 = new Player();
+p1.name = "Rizzler";
+p1.health = 100;
+
+Player p2 = new Player();
+p2.name = "Sigma";
+p2.health = 150;
+
+players.add(p1);
+players.add(p2);
+
+Loop:
+for (Player p : players) {
+    p.printStatus();
+}
+
+---------------------------------------------- 
+🧠 SUMMARY 
+
+- Object = Instance of a class.
+- Class = Blueprint for creating objects.
+- List = Collection of elements.
+- ArrayList = Most common list type in Java.
+
+----------------------------------------------
+- Sigma Alpha Rizzler Lord The IIIV
