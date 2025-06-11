@@ -1,0 +1,92 @@
+Structure
+
+
+Spit meshes with culling and non cullin
+
+Java Syntax
+===============================
+ Java Method (Function) Syntax
+===============================
+
+Basic Syntax:
+-------------
+[access modifier] [return type] [method name]([parameters]) {
+    // method body
+}
+
+Example:
+--------
+public void greet(String name) {
+    System.out.println("Hello, " + name);
+}
+
+Breakdown:
+----------
+
+1. Access Modifier:
+   -----------------
+   Controls who can call the method.
+
+   public      - Accessible from anywhere
+   private     - Accessible only within the same class
+   protected   - Accessible in same package or subclasses
+   (no keyword) - Accessible within the same package only
+
+2. Return Type:
+   -------------
+   Declares what type of value the method returns.
+
+   void        - No return value
+   int         - Returns an integer
+   String      - Returns a text string
+   boolean     - Returns true or false
+   ...etc.
+
+3. Method Name:
+   --------------
+   The name you give the method (e.g., greet, run, startGame)
+
+4. Parameters:
+   ------------
+   Values passed into the method. Each has a type and name.
+
+   Example: String name
+   You can have multiple, separated by commas:
+   Example: int x, int y
+
+5. Method Body:
+   -------------
+   The code inside { ... } that runs when the method is called.
+
+--------------------------------------------------------
+
+Example from a real Java program:
+
+private jjjujjjjvoid init() {
+    // Set up a game window here
+}
+
+Explanation:
+- 'private' = only this class can access it
+- 'void' = it doesn't return anything
+- 'init' = the method name
+- '()' = takes no parameters
+- '{ ... }' = the code that runs
+
+--------------------------------------------------------
+
+Quick Summary:
+
+[access modifier] [return type] [method name]([parameters]) {
+    // what the method does
+}
+
+Example:
+
+public int add(int a, int b) {
+    return a + b;
+}
+
+This method is public, returns an int, and takes two int parameters.
+
+========================================================
