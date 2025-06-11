@@ -3,6 +3,8 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -16,7 +18,8 @@ public class Chunk {
     private ArrayList<Vector3> color_data = new ArrayList<>();
     private int vbo_id;
     private int cbo_id;
-    private ArrayList<Vector3> visible_blocks = new ArrayList<>();
+    private ArrayList<Vector3> blocks = new ArrayList<>();
+    private int chunk_size = Main.CHUNK_SIZE;
     
     private ArrayList<Double> face_color(int face_num) {
         ArrayList<Double> base_color = new ArrayList<>();
@@ -42,5 +45,23 @@ public class Chunk {
         }
         return base_color;
         
+    }
+    private void create_world() {
+        for (int x = 0; x < chunk_size; x++) {
+            for (int y = 0; y < chunk_size; y++) {
+                for (int z = 0; z < chunk_size; z++) {
+                    blocks.add(new Vector3(x,y,z));
+                }
+            }
+        }
+        for (Vector3 temp : blocks) {
+            
+            int x = temp.x; 
+            int y = temp.y;
+            int z = temp.z;
+
+            
+
+        }
     }
 }

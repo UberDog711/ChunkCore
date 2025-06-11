@@ -19,6 +19,7 @@ public class Main {
     public double player_rotation_x = 0;
     public double player_rotation_y = 0;
     public double player_rotation_z = 0;
+    public static int CHUNK_SIZE = 16;
     private long window;
 
     public void run() {
