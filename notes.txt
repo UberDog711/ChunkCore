@@ -3,6 +3,20 @@ Structure
 
 Spit meshes with culling and non cullin
 
+| Face Name  | Common Number |
+| ---------- | ------------- |
+| **Top**    | 0             |
+| **Bottom** | 1             |
+| **Left**   | 2             |
+| **Right**  | 3             |
+| **Front**  | 4             |
+| **Back**   | 5             |
+
+
+
+
+
+
 Java Syntax
 ===============================
  Java Method (Function) Syntax
