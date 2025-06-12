@@ -1,0 +1,5 @@
+{
+  "java.errors.incompleteClasspath.severity": "ignore",
+  "java.errors.unused.import": "ignore",
+  "java.errors.unused.local": "ignore"
+}
