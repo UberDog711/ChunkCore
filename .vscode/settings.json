@@ -1,5 +1,7 @@
 {
   "java.errors.incompleteClasspath.severity": "ignore",
   "java.errors.unused.import": "ignore",
-  "java.errors.unused.local": "ignore"
+"java.errors.unused.local": "ignore",
+"editor.showUnused": false,
+"markdown.validate.unusedLinkDefinitions.enabled": "ignore"
 }

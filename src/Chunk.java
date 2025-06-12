@@ -25,7 +25,7 @@ public class Chunk {
     private int chunk_size = Main.CHUNK_SIZE;
     private ArrayList<Vector3> offsets = new ArrayList<>(Arrays.asList(new Vector3(0, 1, 0), new Vector3(0,-1,0), new Vector3(-1,0,0), new Vector3(1,0,0), new Vector3(0,0,-1), new Vector3(0,0,1)));
     private Map<Integer, Vector3[]> FACE_DEFS = createFaceDefs();
-
+// DICTIONARY MAKER
     private Map<Integer, Vector3[]> createFaceDefs() {
         Map<Integer, Vector3[]> map = new HashMap<>();
 
@@ -73,6 +73,7 @@ public class Chunk {
 
         return map;
     }
+// FACE COLOR PICKER
     private ArrayList<Double> face_color(int face_num) {
         ArrayList<Double> base_color = new ArrayList<>();
         if (face_num == 0) {
@@ -98,6 +99,7 @@ public class Chunk {
         return base_color;
         
     }
+// CHUNK MAKER 
     private void create_world() {
         for (int x = 0; x < chunk_size; x++) {
             for (int y = 0; y < chunk_size; y++) {
@@ -106,8 +108,12 @@ public class Chunk {
                 }
             }
         }
+        int i = -1;
         for (Vector3 temp_block : blocks) {
-            
+            i++;
+            if (i == 1) {
+                continue;
+            }
             double block_x = temp_block.x; 
             double block_y = temp_block.y;
             double block_z = temp_block.z;
@@ -118,7 +124,7 @@ public class Chunk {
                 if (blocks.contains( new Vector3(block_x-off_x, block_y-off_y, block_z-off_z))) {
                     continue;
                 }
-
+                
             }
 
 
