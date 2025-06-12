@@ -11,6 +11,8 @@ import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.*;
+import org.lwjgl.BufferUtils;
+import java.nio.FloatBuffer;
  
 public class Chunk {
     private int x;
@@ -99,6 +101,34 @@ public class Chunk {
         return base_color;
         
     }
+// FLAT VERTEX DATA
+    private float[] flattenVertexData(ArrayList<Vector3> vertexData) {
+        // Each Vector3 has 3 components: x, y, z
+        float[] flatData = new float[vertexData.size() * 3];
+        
+        for (int i = 0; i < vertexData.size(); i++) {
+            Vector3 v = vertexData.get(i);
+            flatData[i * 3] = (float)v.x;
+            flatData[i * 3 + 1] = (float)v.y;
+            flatData[i * 3 + 2] = (float)v.z;
+        }
+        
+        return flatData;
+    }
+// FLATTEN COLOR DATA
+    private float[] flattenColorData(ArrayList<Vector3> colorData) {
+        float[] flatData = new float[colorData.size() * 3];
+        
+        for (int i = 0; i < colorData.size(); i++) {
+            Vector3 v = colorData.get(i);
+            flatData[i * 3] = (float)v.x;
+            flatData[i * 3 + 1] = (float)v.y;
+            flatData[i * 3 + 2] = (float)v.z;
+        }
+        
+        return flatData;
+    }
+
 // CHUNK MAKER 
     private void create_world() {
         for (int x = 0; x < chunk_size; x++) {
@@ -124,8 +154,49 @@ public class Chunk {
                 if (blocks.contains( new Vector3(block_x-off_x, block_y-off_y, block_z-off_z))) {
                     continue;
                 }
+                Vector3[] face_vertices = FACE_DEFS.get(0);
                 
+                for (Vector3 temp_vertex: face_vertices) {
+                    double vertex_x = temp_vertex.x;
+                    double vertex_y = temp_vertex.y;
+                    double vertex_z = temp_vertex.z;
+                    vertex_data.add(new Vector3(vertex_x+block_x, vertex_y+block_y, vertex_z+block_z));
+                }
+                ArrayList<Double> colorList = face_color(i);
+                Vector3 colorVector = new Vector3(colorList.get(0), colorList.get(1), colorList.get(2));
+                color_data.add(colorVector);
             }
+                // Assume flat_vertex_data and flat_color_data are float[] arrays (flattened vertex/color data)
+        float[] flat_vertex_data = flattenVertexData(vertex_data);
+        float[] flat_color_data = flattenColorData(color_data);
+
+        // Generate VBO ID for vertex data
+        vbo_id = GL15.glGenBuffers();
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo_id);
+
+        // Create FloatBuffer from flat_vertex_data
+        FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(flat_vertex_data.length);
+        vertexBuffer.put(flat_vertex_data);
+        vertexBuffer.flip();  // Prepare buffer for reading by OpenGL
+
+        // Upload vertex data to GPU
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertexBuffer, GL15.GL_STATIC_DRAW);
+
+        // Generate VBO ID for color data
+        cbo_id = GL15.glGenBuffers();
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, cbo_id);
+
+        // Create FloatBuffer from flat_color_data
+        FloatBuffer colorBuffer = BufferUtils.createFloatBuffer(flat_color_data.length);
+        colorBuffer.put(flat_color_data);
+        colorBuffer.flip();  // Prepare buffer
+
+        // Upload color data to GPU
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, colorBuffer, GL15.GL_STATIC_DRAW);
+
+        // Unbind buffer (bind to 0)
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
 
 
             
