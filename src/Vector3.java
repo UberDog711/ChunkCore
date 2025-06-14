@@ -16,7 +16,7 @@ public class Vector3 {
                Double.compare(y, other.y) == 0 &&
                Double.compare(z, other.z) == 0;
     }
-
+    
     @Override
     public int hashCode() {
         return java.util.Objects.hash(x, y, z);

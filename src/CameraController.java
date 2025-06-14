@@ -9,12 +9,12 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 import static org.lwjgl.opengl.GL15.*;
 
 public class CameraController {
-    private float[] cameraPos = new float[] {0f, 0f, 0f};    // x, y, z
-    private float[] cameraRotation = new float[] {0f, 0f};  // yaw (around y), pitch (around x)
+    public float[] cameraPos = new float[] {0f, 0f, 0f};    // x, y, z
+    public float[] cameraRotation = new float[] {0f, 0f};  // yaw (around y), pitch (around x)
     private boolean wireframe = false;
 
     private double lastFrameTime;
-    private float movementSpeed = 25f;
+    private float movementSpeed = 4f;
 
     public void handleKeys(long window) {
         double currentTime = glfwGetTime();
@@ -98,5 +98,7 @@ public class CameraController {
         glRotatef(cameraRotation[1], 1f, 0f, 0f); // pitch
         glRotatef(cameraRotation[0], 0f, 1f, 0f); // yaw
         glTranslatef(-cameraPos[0], -cameraPos[1], -cameraPos[2]);
+        
+
     }
 }

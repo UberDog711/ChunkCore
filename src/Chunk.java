@@ -16,7 +16,7 @@ public class Chunk {
         this.x = x;
         this.y = y;
     }
-
+// VARIABLES
     private int x, y;
     private ArrayList<Vector3> vertex_data = new ArrayList<>();
     private ArrayList<Vector3> color_data = new ArrayList<>();
@@ -29,9 +29,10 @@ public class Chunk {
         new Vector3(-1, 0, 0), new Vector3(1, 0, 0),
         new Vector3(0, 0, -1), new Vector3(0, 0, 1)
     ));
-
     private Map<Integer, Vector3[]> FACE_DEFS = createFaceDefs();
 
+
+// METHOD CREATES LIST
     private Map<Integer, Vector3[]> createFaceDefs() {
         Map<Integer, Vector3[]> map = new HashMap<>();
         map.put(0, new Vector3[]{new Vector3(-0.5, 0.5, 0.5), new Vector3(0.5, 0.5, 0.5), new Vector3(0.5, 0.5, -0.5), new Vector3(-0.5, 0.5, -0.5)});
@@ -42,7 +43,7 @@ public class Chunk {
         map.put(5, new Vector3[]{new Vector3(-0.5, -0.5, -0.5), new Vector3(-0.5, 0.5, -0.5), new Vector3(0.5, 0.5, -0.5), new Vector3(0.5, -0.5, -0.5)});
         return map;
     }
-
+// CREATES FACE COLORS
     private ArrayList<Double> face_color(int face_num) {
         ArrayList<Double> base_color = new ArrayList<>();
         if (face_num == 0) {
@@ -64,7 +65,7 @@ public class Chunk {
         }
         return base_color;
     }
-
+// FLATTENS VERTEX DATA
     private float[] flattenVertexData(ArrayList<Vector3> data) {
         float[] flat = new float[data.size() * 3];
         for (int i = 0; i < data.size(); i++) {
@@ -75,7 +76,7 @@ public class Chunk {
         }
         return flat;
     }
-
+// FLATTENS COLOR DATA
     private float[] flattenColorData(ArrayList<Vector3> data) {
         float[] flat = new float[data.size() * 3];
         for (int i = 0; i < data.size(); i++) {
@@ -86,8 +87,9 @@ public class Chunk {
         }
         return flat;
     }
-
+// CREATES CHUNK
     public void create_world() {
+        
         // Generate blocks
         for (int x = 0; x < chunk_size; x++) {
             for (int y = 0; y < 1; y++) {

@@ -23,11 +23,12 @@ public class Main {
     private CameraController camera;
 
     public static final int CHUNK_SIZE = 64;  // you can change this later
-    public static final int RENDER_DISTANCE = 32;
+    public static final int RENDER_DISTANCE = 4;
     private ArrayList<Chunk> chunks = new ArrayList<>();
 
     public void run() {
         init();
+        
         loop();
 
         glfwFreeCallbacks(window);
@@ -77,6 +78,8 @@ public class Main {
                 chunks.add(chunk);
             }
         }
+        double end_start_time = glfwGetTime();
+        System.out.println(end_start_time);
     }
 
     private void loop() {
@@ -105,7 +108,10 @@ public class Main {
                 System.out.println("FPS: " + frames);
                 frames = 0;
                 lastTime = currentTime;
+                System.out.println("Position: X=" + (camera.cameraPos[0]) + " Y=" + (camera.cameraPos[1]) + " Z=" + (camera.cameraPos[2]));
+                System.out.println("Rotation X=" + (camera.cameraRotation[0]) + " Y=" + (camera.cameraRotation[1]));
             }
+
         }
     }
 
