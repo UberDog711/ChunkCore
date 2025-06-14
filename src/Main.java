@@ -22,8 +22,8 @@ public class Main {
     private long window;
     private CameraController camera;
 
-    public static final int CHUNK_SIZE = 4;  // you can change this later
-
+    public static final int CHUNK_SIZE = 64;  // you can change this later
+    public static final int RENDER_DISTANCE = 32;
     private ArrayList<Chunk> chunks = new ArrayList<>();
 
     public void run() {
@@ -70,8 +70,8 @@ public class Main {
 
         camera = new CameraController();
         // Create chunks
-        for (int cx = -10; cx <= 10; cx++) {
-            for (int cy = -10; cy <= 10; cy++) {
+        for (int cx = -RENDER_DISTANCE; cx <= RENDER_DISTANCE; cx++) {
+            for (int cy = -RENDER_DISTANCE; cy <= RENDER_DISTANCE; cy++) {
                 Chunk chunk = new Chunk(cx, cy);
                 chunk.create_world();
                 chunks.add(chunk);
@@ -80,15 +80,15 @@ public class Main {
     }
 
     private void loop() {
+        double lastTime = glfwGetTime();
+        int frames = 0;
+
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             
             glLoadIdentity();
             camera.handleKeys(window);
             camera.handleMouse(window);
-
-            // Basic camera transform
-            
 
             // Render all chunks
             for (Chunk chunk : chunks) {
@@ -97,8 +97,18 @@ public class Main {
 
             glfwSwapBuffers(window);
             glfwPollEvents();
+
+            // FPS Counter logic
+            frames++;
+            double currentTime = glfwGetTime();
+            if (currentTime - lastTime >= 1.0) {
+                System.out.println("FPS: " + frames);
+                frames = 0;
+                lastTime = currentTime;
+            }
         }
     }
+
 
     public static void main(String[] args) {
         new Main().run();

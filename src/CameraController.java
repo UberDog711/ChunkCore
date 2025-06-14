@@ -75,8 +75,8 @@ public class CameraController {
         glfwGetCursorPos(window, xpos, ypos);
 
         // Calculate delta from center (assuming 800x600 window)
-        double centerX = 400;
-        double centerY = 300;
+        double centerX = 640;
+        double centerY = 360;
 
         double deltaX = xpos[0] - centerX;
         double deltaY = ypos[0] - centerY;
