@@ -12,12 +12,12 @@ import static org.lwjgl.system.MemoryUtil.*;
 import org.lwjgl.BufferUtils;
 
 public class Chunk {
-    public Chunk(int x, int y) {
+    public Chunk(int x, int z) {
         this.x = x;
-        this.y = y;
+        this.z = z;
     }
 // VARIABLES
-    private int x, y;
+    private int x, z;
     private ArrayList<Vector3> vertex_data = new ArrayList<>();
     private ArrayList<Vector3> color_data = new ArrayList<>();
     private int vbo_id, cbo_id, vertex_count;
@@ -92,11 +92,13 @@ public class Chunk {
         
         // Generate blocks
         for (int x = 0; x < chunk_size; x++) {
-            for (int y = 0; y < 1; y++) {
+            for (int y = 0; y <= 1; y++) {
                 for (int z = 0; z < chunk_size; z++) {
-                    double worldX = this.x * chunk_size + x;
+                    double worldX = this.x + x;
                     double worldY = y;
-                    double worldZ = this.y * chunk_size + z;
+                    double worldZ = this.z + z;
+
+
                     blocks.add(new Vector3(worldX, worldY, worldZ));
                 }
             }
@@ -106,7 +108,7 @@ public class Chunk {
             double bx = block.x, by = block.y, bz = block.z;
 
             for (int face = 0; face < 6; face++) {
-                if (face == 1) continue;  // Optional: skip bottom faces
+                if (face == 1 || face == 0) continue;  // Optional: skip bottom faces
 
                 Vector3 offset = offsets.get(face);
                 double ox = offset.x, oy = offset.y, oz = offset.z;
@@ -154,6 +156,8 @@ public class Chunk {
         glBindBuffer(GL_ARRAY_BUFFER, cbo_id);
         glColorPointer(3, GL_FLOAT, 0, 0L);
 
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        //glLineWidth(1);
         glDrawArrays(GL_QUADS, 0, vertex_count);
 
         glDisableClientState(GL_VERTEX_ARRAY);
@@ -161,3 +165,4 @@ public class Chunk {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 }
+ 

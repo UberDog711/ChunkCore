@@ -23,7 +23,7 @@ public class Main {
     private CameraController camera;
 
     public static final int CHUNK_SIZE = 64;  // you can change this later
-    public static final int RENDER_DISTANCE = 4;
+    public static final int RENDER_DISTANCE = 16;
     private ArrayList<Chunk> chunks = new ArrayList<>();
 
     public void run() {
@@ -66,14 +66,14 @@ public class Main {
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         float aspect = 1280f / 720f;
-        perspectiveGL(70.0f, aspect, 0.1f, 1000.0f);
+        perspectiveGL(90.0f, aspect, 0.1f, 1000.0f);
         glMatrixMode(GL_MODELVIEW);
 
         camera = new CameraController();
         // Create chunks
         for (int cx = -RENDER_DISTANCE; cx <= RENDER_DISTANCE; cx++) {
-            for (int cy = -RENDER_DISTANCE; cy <= RENDER_DISTANCE; cy++) {
-                Chunk chunk = new Chunk(cx, cy);
+            for (int cz = -RENDER_DISTANCE; cz <= RENDER_DISTANCE; cz++) {
+                Chunk chunk = new Chunk(cx * CHUNK_SIZE, cz * CHUNK_SIZE);
                 chunk.create_world();
                 chunks.add(chunk);
             }

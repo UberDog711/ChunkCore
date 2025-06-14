@@ -1,3 +1,6 @@
+import java.util.Objects;
+
+
 public class Vector3 {
     public double x, y, z;
 
@@ -8,17 +11,17 @@ public class Vector3 {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Vector3)) return false;
-        Vector3 other = (Vector3) o;
+    public boolean equals(Object obj) {
+        if (this == obj) return true;
+        if (obj == null || getClass() != obj.getClass()) return false;
+        Vector3 other = (Vector3) obj;
         return Double.compare(x, other.x) == 0 &&
                Double.compare(y, other.y) == 0 &&
                Double.compare(z, other.z) == 0;
     }
-    
+
     @Override
     public int hashCode() {
-        return java.util.Objects.hash(x, y, z);
+        return Objects.hash(x, y, z);
     }
 }
