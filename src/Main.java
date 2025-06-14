@@ -3,85 +3,100 @@ import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.nio.FloatBuffer;
+
+
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.system.MemoryUtil.*;
-
-
+import org.lwjgl.BufferUtils;
 
 public class Main {
-   
-    public double player_x = 0;
-    public double player_y = 0;
-    public double player_z = 0;
-    public double player_rotation_x = 0;
-    public double player_rotation_y = 0;
-    public double player_rotation_z = 0;
-    public static int CHUNK_SIZE = 16;
+
     private long window;
+    private CameraController camera;
+
+    public static final int CHUNK_SIZE = 4;  // you can change this later
+
+    private ArrayList<Chunk> chunks = new ArrayList<>();
 
     public void run() {
-        
         init();
         loop();
 
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
         glfwTerminate();
-        glfwSetErrorCallback(null).free();
     }
-    
-    private void init() {
-        GLFWErrorCallback.createPrint(System.err).set();
+    public void perspectiveGL(double fovY, double aspect, double zNear, double zFar) {
+    double fH = Math.tan(Math.toRadians(fovY / 2)) * zNear;
+    double fW = fH * aspect;
+    glFrustum(-fW, fW, -fH, fH, zNear, zFar);
+    }
 
+    private void init() {
+        
+        
         if (!glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
 
-        glfwDefaultWindowHints();
-        window = glfwCreateWindow(1280, 720, "Voxel Game", NULL, NULL);
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
+        window = glfwCreateWindow(1280, 720, "Voxel Engine", NULL, NULL);
         if (window == NULL) {
-            throw new RuntimeException("Failed to create the GLFW window");
+            throw new RuntimeException("Failed to create window");
         }
 
         glfwMakeContextCurrent(window);
-        glfwSwapInterval(0);
+        glfwSwapInterval(1);  // enable v-sync
         glfwShowWindow(window);
-    }
-    private void movement_rotations() {
-        
 
-
-    }
-    private void loop() {
         GL.createCapabilities();
-       
-        double time = glfwGetTime();
+
+        // Very basic OpenGL setup
+        glEnable(GL_DEPTH_TEST);
+        glClearColor(0.5f, 0.7f, 1.0f, 1.0f); // sky color
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        float aspect = 1280f / 720f;
+        perspectiveGL(70.0f, aspect, 0.1f, 1000.0f);
+        glMatrixMode(GL_MODELVIEW);
+
+        camera = new CameraController();
+        // Create chunks
+        for (int cx = -10; cx <= 10; cx++) {
+            for (int cy = -10; cy <= 10; cy++) {
+                Chunk chunk = new Chunk(cx, cy);
+                chunk.create_world();
+                chunks.add(chunk);
+            }
+        }
+    }
+
+    private void loop() {
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-            // Render logic here
-            double time_between_ticks = glfwGetTime() - time;
-            // Test
-            /*
-            starts 
-            tbt = 0.01 - 000
-            or 
-            little bit in
-            tbt = 1.41 - 1.40
+            
+            glLoadIdentity();
+            camera.handleKeys(window);
+            camera.handleMouse(window);
 
-        
-             */
+            // Basic camera transform
+            
 
+            // Render all chunks
+            for (Chunk chunk : chunks) {
+                chunk.render();
+            }
 
-
-            time = glfwGetTime();
             glfwSwapBuffers(window);
             glfwPollEvents();
-            System.out.println(1/time_between_ticks);
-            
         }
     }
 
