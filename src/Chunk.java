@@ -26,7 +26,7 @@ public class Chunk {
 
     private ArrayList<Vector3> offsets = new ArrayList<>(Arrays.asList(
         new Vector3(0, 1, 0), new Vector3(0, -1, 0),
-        new Vector3(-1, 0, 0), new Vector3(1, 0, 0),
+        new Vector3(1, 0, 0), new Vector3(-1, 0, 0),
         new Vector3(0, 0, -1), new Vector3(0, 0, 1)
     ));
     private Map<Integer, Vector3[]> FACE_DEFS = createFaceDefs();
@@ -91,9 +91,9 @@ public class Chunk {
     public void create_world() {
         
         // Generate blocks
-        for (int x = 0; x < chunk_size; x++) {
-            for (int y = 0; y <= 1; y++) {
-                for (int z = 0; z < chunk_size; z++) {
+        for (int x = -1; x < chunk_size; x++) {
+            for (int y = 0; y < 1; y++) {
+                for (int z = -1; z < chunk_size; z++) {
                     double worldX = this.x + x;
                     double worldY = y;
                     double worldZ = this.z + z;
@@ -108,7 +108,7 @@ public class Chunk {
             double bx = block.x, by = block.y, bz = block.z;
 
             for (int face = 0; face < 6; face++) {
-                if (face == 1 || face == 0) continue;  // Optional: skip bottom faces
+                if (face == 1) continue;  // Optional: skip bottom faces
 
                 Vector3 offset = offsets.get(face);
                 double ox = offset.x, oy = offset.y, oz = offset.z;
@@ -130,6 +130,10 @@ public class Chunk {
 
         float[] flat_vertices = flattenVertexData(vertex_data);
         float[] flat_colors = flattenColorData(color_data);
+
+        vertex_data.clear();
+        color_data.clear();
+        
         vertex_count = flat_vertices.length / 3;
 
         vbo_id = glGenBuffers();

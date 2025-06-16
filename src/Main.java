@@ -16,14 +16,14 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.system.MemoryUtil.*;
 import org.lwjgl.BufferUtils;
-
+ 
 public class Main {
 
     private long window;
     private CameraController camera;
 
     public static final int CHUNK_SIZE = 64;  // you can change this later
-    public static final int RENDER_DISTANCE = 16;
+    public static final int RENDER_DISTANCE = 32;
     private ArrayList<Chunk> chunks = new ArrayList<>();
 
     public void run() {
@@ -62,11 +62,13 @@ public class Main {
 
         // Very basic OpenGL setup
         glEnable(GL_DEPTH_TEST);
+        //glEnable(GL_CULL_FACE);
+        //glCullFace(GL_BACK);
         glClearColor(0.5f, 0.7f, 1.0f, 1.0f); // sky color
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         float aspect = 1280f / 720f;
-        perspectiveGL(90.0f, aspect, 0.1f, 1000.0f);
+        perspectiveGL(90.0f, aspect, 0.1f, 4800.0f);
         glMatrixMode(GL_MODELVIEW);
 
         camera = new CameraController();
