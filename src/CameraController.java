@@ -14,7 +14,7 @@ public class CameraController {
     private boolean wireframe = false;
 
     private double lastFrameTime;
-    private float movementSpeed = 160f;
+    private float movementSpeed = 16f;
 
     public void handleKeys(long window) {
         double currentTime = glfwGetTime();

@@ -21,13 +21,13 @@ public class Chunk {
     private ArrayList<Vector3> vertex_data = new ArrayList<>();
     private ArrayList<Vector3> color_data = new ArrayList<>();
     private int vbo_id, cbo_id, vertex_count;
-    private HashSet<Vector3> blocks = new HashSet<>(); // USE HASHSET HERE
+    private List<Integer> blocks = new ArrayList<>();
     private int chunk_size = Main.CHUNK_SIZE;
 
-    private ArrayList<Vector3> offsets = new ArrayList<>(Arrays.asList(
-        new Vector3(0, 1, 0), new Vector3(0, -1, 0),
-        new Vector3(1, 0, 0), new Vector3(-1, 0, 0),
-        new Vector3(0, 0, -1), new Vector3(0, 0, 1)
+    private ArrayList<Vector3i> offsets = new ArrayList<>(Arrays.asList(
+        new Vector3i(0, 1, 0), new Vector3i(0, -1, 0),
+        new Vector3i(1, 0, 0), new Vector3i(-1, 0, 0),
+        new Vector3i(0, 0, -1), new Vector3i(0, 0, 1)
     ));
     private Map<Integer, Vector3[]> FACE_DEFS = createFaceDefs();
 
@@ -87,37 +87,54 @@ public class Chunk {
         }
         return flat;
     }
+//FLATTENS BLOCK DATA
+    public int packPos(int x, int y, int z) {
+        return (x & 0x3F)       // bits 0-5
+            | ((y & 0x3F) << 6)  // bits 6-11
+            | ((z & 0x3F) << 12); // bits 12-17
+    }
+// UNFLATTENS BLOCK DATA
+    public int getX(int packed) {
+        return packed & 0x3F;
+    }
+    public int getY(int packed) {
+        return (packed >> 6) & 0x3F;
+    }
+    public int getZ(int packed) {
+        return (packed >> 12) & 0x3F;
+    }
 // CREATES CHUNK
     public void create_world() {
         
-        // Generate blocks
-        for (int x = -1; x < chunk_size; x++) {
+        
+
+        for (int x = 0; x < 64; x++) {
             for (int y = 0; y < 1; y++) {
-                for (int z = -1; z < chunk_size; z++) {
-                    double worldX = this.x + x;
-                    double worldY = y;
-                    double worldZ = this.z + z;
-
-
-                    blocks.add(new Vector3(worldX, worldY, worldZ));
+                for (int z = 0; z < 64; z++) {
+                    int packed = packPos(x, y, z);
+                    blocks.add(packed);
                 }
             }
         }
 
-        for (Vector3 block : blocks) {
-            double bx = block.x, by = block.y, bz = block.z;
+        
+
+
+        for (int block : blocks) {
+            int bx = getX(block), by = getY(block), bz = getZ(block);
 
             for (int face = 0; face < 6; face++) {
                 if (face == 1) continue;  // Optional: skip bottom faces
 
-                Vector3 offset = offsets.get(face);
-                double ox = offset.x, oy = offset.y, oz = offset.z;
+                Vector3i offset = offsets.get(face);
+                int ox = offset.x, oy = offset.y, oz = offset.z;
 
-                if (blocks.contains(new Vector3(bx + ox, by + oy, bz + oz))) continue;
+                if (blocks.contains( packPos(bx + ox, by + oy, bz + oz))) continue;
+
 
                 Vector3[] face_vertices = FACE_DEFS.get(face);
                 for (Vector3 v : face_vertices) {
-                    vertex_data.add(new Vector3(v.x + bx, v.y + by, v.z + bz));
+                    vertex_data.add(new Vector3(v.x + bx + x, v.y + by , v.z + bz + z));
                 }
 
                 ArrayList<Double> colorList = face_color(face);
@@ -160,8 +177,8 @@ public class Chunk {
         glBindBuffer(GL_ARRAY_BUFFER, cbo_id);
         glColorPointer(3, GL_FLOAT, 0, 0L);
 
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        //glLineWidth(1);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glLineWidth(1);
         glDrawArrays(GL_QUADS, 0, vertex_count);
 
         glDisableClientState(GL_VERTEX_ARRAY);
