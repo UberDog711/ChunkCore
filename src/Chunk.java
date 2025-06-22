@@ -136,19 +136,19 @@ public class Chunk {
     }
 //FLATTENS BLOCK DATA
     public int packPos(int x, int y, int z) {
-        return (x & 0x3F)       // bits 0-5
-            | ((y & 0x3F) << 6)  // bits 6-11
-            | ((z & 0x3F) << 12); // bits 12-17
+        return (x & 0x7F)       // bits 0-5
+            | ((y & 0x7F) << 7)  // bits 6-11
+            | ((z & 0x7F) << 14); // bits 12-17
     }
 // UNFLATTENS BLOCK DATA
     public int getX(int packed) {
-        return packed & 0x3F;
+        return packed & 0x7F;
     }
     public int getY(int packed) {
-        return (packed >> 6) & 0x3F;
+        return (packed >> 7) & 0x7F;
     }
     public int getZ(int packed) {
-        return (packed >> 12) & 0x3F;
+        return (packed >> 14) & 0x7F;
     }
 // CREATES CHUNK
     public void create_world() {
@@ -156,14 +156,14 @@ public class Chunk {
         Random rand_off = new Random();
         int off = rand_off.nextInt((10-5) + 1) + 5;
         for (int x = 0; x < chunk_size; x++) {
-            for (int y = 0; y < 1; y++) {
+            for (int y = 0; y < 2; y++) {
                 for (int z = 0; z < chunk_size; z++) {
                     int packed = packPos(x, y + off, z);
                     blocks.add(packed);
                 }
             }
         }
-
+        
         
 
 
@@ -235,22 +235,28 @@ public class Chunk {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 
-    public void render() {
-        glEnableClientState(GL_VERTEX_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-        glVertexPointer(3, GL_FLOAT, 0, 0L);
+   public void render(boolean wireframe) {
+    glEnableClientState(GL_VERTEX_ARRAY);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
+    glVertexPointer(3, GL_FLOAT, 0, 0L);
 
-        glEnableClientState(GL_COLOR_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER, cbo_id);
-        glColorPointer(3, GL_FLOAT, 0, 0L);
+    glEnableClientState(GL_COLOR_ARRAY);
+    glBindBuffer(GL_ARRAY_BUFFER, cbo_id);
+    glColorPointer(3, GL_FLOAT, 0, 0L);
 
+    if (wireframe) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glLineWidth(1);
-        glDrawArrays(GL_QUADS, 0, vertex_count);
-
-        glDisableClientState(GL_VERTEX_ARRAY);
-        glDisableClientState(GL_COLOR_ARRAY);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    } else {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
+
+    glDrawArrays(GL_QUADS, 0, vertex_count);
+
+    glDisableClientState(GL_VERTEX_ARRAY);
+    glDisableClientState(GL_COLOR_ARRAY);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
+}
+
  

@@ -22,10 +22,10 @@ public class Main {
     private long window;
     private CameraController camera;
 
-    public static  int CHUNK_SIZE = 128;  // you can change this later
+    public static  int CHUNK_SIZE = 124;  // you can change this later
     public static  int RENDER_DISTANCE = 16;
     private ArrayList<Chunk> chunks = new ArrayList<>();
-
+    public static boolean wireframe = false;
     public void run() {
         init();
         
@@ -101,7 +101,7 @@ public class Main {
 
             // Render all chunks
             for (Chunk chunk : chunks) {
-                chunk.render();
+                chunk.render(wireframe);
             }
 
             glfwSwapBuffers(window);

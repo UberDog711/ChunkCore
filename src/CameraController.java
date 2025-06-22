@@ -11,10 +11,10 @@ import static org.lwjgl.opengl.GL15.*;
 public class CameraController {
     public float[] cameraPos = new float[] {0f, 0f, 0f};    // x, y, z
     public float[] cameraRotation = new float[] {0f, 0f};  // yaw (around y), pitch (around x)
-    private boolean wireframe = false;
-
+   
     private double lastFrameTime;
     private float movementSpeed = 160f;
+    private boolean prevQ = false;
 
     public void handleKeys(long window) {
         double currentTime = glfwGetTime();
@@ -31,6 +31,7 @@ public class CameraController {
         boolean space = glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS;
         boolean ctrl = glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS;
         boolean q = glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS;
+        
 
         // Movement calculations
         double yawRad = Math.toRadians(cameraRotation[0]);
@@ -60,15 +61,21 @@ public class CameraController {
             cameraPos[1] -= speed;
         }
 
-        if (q) {
-            wireframe = !wireframe;
-            if (wireframe) {
-                glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        if (q && ! prevQ) {
+            if (Main.wireframe == true) {
+                Main.wireframe = false;
             } else {
-                glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+                Main.wireframe = true;
             }
+            System.out.println( Main.wireframe);
+            
+            
         }
+        prevQ = q;
+        // rest of key handling...
     }
+            
+
     public void handleMouse(long window) {
         double[] xpos = new double[1];
         double[] ypos = new double[1];
