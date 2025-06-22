@@ -22,8 +22,8 @@ public class Main {
     private long window;
     private CameraController camera;
 
-    public static final int CHUNK_SIZE = 64;  // you can change this later
-    public static final int RENDER_DISTANCE = 4;
+    public static  int CHUNK_SIZE = 128;  // you can change this later
+    public static  int RENDER_DISTANCE = 16;
     private ArrayList<Chunk> chunks = new ArrayList<>();
 
     public void run() {
@@ -62,8 +62,8 @@ public class Main {
 
         // Very basic OpenGL setup
         glEnable(GL_DEPTH_TEST);
-        //glEnable(GL_CULL_FACE);
-        //glCullFace(GL_BACK);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_BACK);
         glClearColor(0.5f, 0.7f, 1.0f, 1.0f); // sky color
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
@@ -73,11 +73,15 @@ public class Main {
 
         camera = new CameraController();
         // Create chunks
+        double tot = (RENDER_DISTANCE*2+1) * (RENDER_DISTANCE * 2+1);
+        double cur = 0;
         for (int cx = -RENDER_DISTANCE; cx <= RENDER_DISTANCE; cx++) {
             for (int cz = -RENDER_DISTANCE; cz <= RENDER_DISTANCE; cz++) {
                 Chunk chunk = new Chunk(cx * CHUNK_SIZE, cz * CHUNK_SIZE);
                 chunk.create_world();
                 chunks.add(chunk);
+                cur ++;
+                System.out.println(cur/tot*100);
             }
         }
         double end_start_time = glfwGetTime();

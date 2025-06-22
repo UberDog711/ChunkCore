@@ -15,19 +15,20 @@ public class Chunk {
     public Chunk(int x, int z) {
         this.x = x;
         this.z = z;
+        
     }
 // VARIABLES
     private int x, z;
     private ArrayList<Vector3> vertex_data = new ArrayList<>();
     private ArrayList<Vector3> color_data = new ArrayList<>();
     private int vbo_id, cbo_id, vertex_count;
-    private List<Integer> blocks = new ArrayList<>();
+    private Set<Integer> blocks = new HashSet<>();
     private int chunk_size = Main.CHUNK_SIZE;
 
     private ArrayList<Vector3i> offsets = new ArrayList<>(Arrays.asList(
         new Vector3i(0, 1, 0), new Vector3i(0, -1, 0),
-        new Vector3i(1, 0, 0), new Vector3i(-1, 0, 0),
-        new Vector3i(0, 0, -1), new Vector3i(0, 0, 1)
+        new Vector3i(-1, 0, 0), new Vector3i(1, 0, 0),
+        new Vector3i(0, 0, 1), new Vector3i(0, 0, -1)
     ));
     private Map<Integer, Vector3[]> FACE_DEFS = createFaceDefs();
 
@@ -35,14 +36,60 @@ public class Chunk {
 // METHOD CREATES LIST
     private Map<Integer, Vector3[]> createFaceDefs() {
         Map<Integer, Vector3[]> map = new HashMap<>();
-        map.put(0, new Vector3[]{new Vector3(-0.5, 0.5, 0.5), new Vector3(0.5, 0.5, 0.5), new Vector3(0.5, 0.5, -0.5), new Vector3(-0.5, 0.5, -0.5)});
-        map.put(1, new Vector3[]{new Vector3(-0.5, -0.5, -0.5), new Vector3(0.5, -0.5, -0.5), new Vector3(0.5, -0.5, 0.5), new Vector3(-0.5, -0.5, 0.5)});
-        map.put(2, new Vector3[]{new Vector3(-0.5, -0.5, -0.5), new Vector3(-0.5, -0.5, 0.5), new Vector3(-0.5, 0.5, 0.5), new Vector3(-0.5, 0.5, -0.5)});
-        map.put(3, new Vector3[]{new Vector3(0.5, -0.5, -0.5), new Vector3(0.5, 0.5, -0.5), new Vector3(0.5, 0.5, 0.5), new Vector3(0.5, -0.5, 0.5)});
-        map.put(4, new Vector3[]{new Vector3(-0.5, -0.5, 0.5), new Vector3(0.5, -0.5, 0.5), new Vector3(0.5, 0.5, 0.5), new Vector3(-0.5, 0.5, 0.5)});
-        map.put(5, new Vector3[]{new Vector3(-0.5, -0.5, -0.5), new Vector3(-0.5, 0.5, -0.5), new Vector3(0.5, 0.5, -0.5), new Vector3(0.5, -0.5, -0.5)});
+
+        // Top face (+Y), looking from above
+        map.put(0, new Vector3[]{
+            new Vector3(0, 1, 1),
+            new Vector3(1, 1, 1),
+            new Vector3(1, 1, 0),
+            new Vector3(0, 1, 0)
+        });
+
+        // Bottom face (-Y), looking from below
+        map.put(1, new Vector3[]{
+            new Vector3(0, 0, 0),
+            new Vector3(1, 0, 0),
+            new Vector3(1, 0, 1),
+            new Vector3(0, 0, 1)
+        });
+
+        // Left face (-X), looking from left
+        map.put(2, new Vector3[]{
+            new Vector3(0, 0, 1),
+            new Vector3(0, 1, 1),
+            new Vector3(0, 1, 0),
+            new Vector3(0, 0, 0)
+        });
+
+        // Right face (+X), looking from right
+        map.put(3, new Vector3[]{
+            new Vector3(1, 0, 0),
+            new Vector3(1, 1, 0),
+            new Vector3(1, 1, 1),
+            new Vector3(1, 0, 1)
+        });
+
+        // Front face (+Z), looking from front
+        map.put(4, new Vector3[]{
+            new Vector3(0, 0, 1),
+            new Vector3(1, 0, 1),
+            new Vector3(1, 1, 1),
+            new Vector3(0, 1, 1)
+        });
+
+        // Back face (-Z), looking from back
+        map.put(5, new Vector3[]{
+            new Vector3(0, 0, 0),
+            new Vector3(0, 1, 0),
+            new Vector3(1, 1, 0),
+            new Vector3(1, 0, 0)
+        });
+
         return map;
     }
+
+
+
 // CREATES FACE COLORS
     private ArrayList<Double> face_color(int face_num) {
         ArrayList<Double> base_color = new ArrayList<>();
@@ -106,12 +153,12 @@ public class Chunk {
 // CREATES CHUNK
     public void create_world() {
         
-        
-
-        for (int x = 0; x < 64; x++) {
-            for (int y = 0; y < 3; y++) {
-                for (int z = 0; z < 64; z++) {
-                    int packed = packPos(x, y, z);
+        Random rand_off = new Random();
+        int off = rand_off.nextInt((10-5) + 1) + 5;
+        for (int x = 0; x < chunk_size; x++) {
+            for (int y = 0; y < 1; y++) {
+                for (int z = 0; z < chunk_size; z++) {
+                    int packed = packPos(x, y + off, z);
                     blocks.add(packed);
                 }
             }
@@ -149,8 +196,13 @@ public class Chunk {
 
                 Vector3[] face_vertices = FACE_DEFS.get(face);
                 for (Vector3 v : face_vertices) {
-                    vertex_data.add(new Vector3(v.x + bx + x, v.y + by , v.z + bz + z));
+                    vertex_data.add(new Vector3(
+                        v.x + bx + this.x,
+                        v.y + by,
+                        v.z + bz + this.z
+                    ));
                 }
+
 
                 ArrayList<Double> colorList = face_color(face);
                 Vector3 colorVector = new Vector3(colorList.get(0), colorList.get(1), colorList.get(2));
@@ -192,8 +244,8 @@ public class Chunk {
         glBindBuffer(GL_ARRAY_BUFFER, cbo_id);
         glColorPointer(3, GL_FLOAT, 0, 0L);
 
-        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        //glLineWidth(1);
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        glLineWidth(1);
         glDrawArrays(GL_QUADS, 0, vertex_count);
 
         glDisableClientState(GL_VERTEX_ARRAY);
