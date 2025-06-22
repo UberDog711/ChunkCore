@@ -23,7 +23,7 @@ public class Main {
     private CameraController camera;
 
     public static final int CHUNK_SIZE = 64;  // you can change this later
-    public static final int RENDER_DISTANCE = 32;
+    public static final int RENDER_DISTANCE = 4;
     private ArrayList<Chunk> chunks = new ArrayList<>();
 
     public void run() {

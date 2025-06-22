@@ -109,7 +109,7 @@ public class Chunk {
         
 
         for (int x = 0; x < 64; x++) {
-            for (int y = 0; y < 1; y++) {
+            for (int y = 0; y < 3; y++) {
                 for (int z = 0; z < 64; z++) {
                     int packed = packPos(x, y, z);
                     blocks.add(packed);
@@ -122,14 +122,29 @@ public class Chunk {
 
         for (int block : blocks) {
             int bx = getX(block), by = getY(block), bz = getZ(block);
-
             for (int face = 0; face < 6; face++) {
                 if (face == 1) continue;  // Optional: skip bottom faces
 
                 Vector3i offset = offsets.get(face);
                 int ox = offset.x, oy = offset.y, oz = offset.z;
 
-                if (blocks.contains( packPos(bx + ox, by + oy, bz + oz))) continue;
+                // Get neighbor position
+                int nx = bx + ox;
+                int ny = by + oy;
+                int nz = bz + oz;
+
+                // Check boundaries before checking blocks list
+                if (nx >= 0 && nx < chunk_size &&
+                    ny >= 0 && ny < chunk_size &&
+                    nz >= 0 && nz < chunk_size) {
+                    // Neighbor is inside the chunk
+                    if (blocks.contains(packPos(nx, ny, nz))) {
+                        continue; // Skip face if neighbor is filled
+                    }
+                }
+
+                // If we reach here, we draw the face — either empty neighbor OR outside chunk
+
 
 
                 Vector3[] face_vertices = FACE_DEFS.get(face);
@@ -177,8 +192,8 @@ public class Chunk {
         glBindBuffer(GL_ARRAY_BUFFER, cbo_id);
         glColorPointer(3, GL_FLOAT, 0, 0L);
 
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glLineWidth(1);
+        //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+        //glLineWidth(1);
         glDrawArrays(GL_QUADS, 0, vertex_count);
 
         glDisableClientState(GL_VERTEX_ARRAY);
