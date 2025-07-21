@@ -87,29 +87,31 @@ public class Chunk {
 
         return map;
     }
-
-
-
 // CREATES FACE COLORS
     private ArrayList<Double> face_color(int face_num) {
         ArrayList<Double> base_color = new ArrayList<>();
+       // Base RGB color components
+        final double BASE_R = 70f/255;
+        final double BASE_G = 90f/255f;
+        final double BASE_B = 80f/255f;
+
+        // Brightness multipliers per face
+        double multiplier;
         if (face_num == 0) {
-            base_color.add(0.141 * 1.2);
-            base_color.add(0.251 * 1.2);
-            base_color.add(0.141 * 1.2);
+            multiplier = 1.4;
         } else if (face_num == 1) {
-            base_color.add(0.141 * 0.6);
-            base_color.add(0.251 * 0.6);
-            base_color.add(0.141 * 0.6);
+            multiplier = 0.4;
         } else if (face_num == 2 || face_num == 3) {
-            base_color.add(0.141 * 0.8);
-            base_color.add(0.251 * 0.8);
-            base_color.add(0.141 * 0.8);
+            multiplier = 0.6;
         } else {
-            base_color.add(0.141);
-            base_color.add(0.251);
-            base_color.add(0.141);
+            multiplier = 1.0;
         }
+
+        // Apply brightness to base color
+        base_color.add(BASE_R * multiplier);
+        base_color.add(BASE_G * multiplier);
+        base_color.add(BASE_B * multiplier);
+
         return base_color;
     }
 // FLATTENS VERTEX DATA
@@ -153,16 +155,24 @@ public class Chunk {
 // CREATES CHUNK
     public void create_world() {
         
-        Random rand_off = new Random();
-        int off = rand_off.nextInt((10-5) + 1) + 5;
+        float scale = 150f;
+
         for (int x = 0; x < chunk_size; x++) {
-            for (int y = 0; y < 2; y++) {
-                for (int z = 0; z < chunk_size; z++) {
-                    int packed = packPos(x, y + off, z);
+            for (int z = 0; z < chunk_size; z++) {
+                // Convert chunk coords to world coords
+                float worldX = (this.x) + x;
+                float worldZ = (this.z) + z;
+
+                float noise = PerlinNoise.perlin(worldX / scale, worldZ / scale);
+                int height = (int)(noise * noise * 128);
+
+                for (int y = height-1; y <= height; y++) {
+                    int packed = packPos(x, y, z);
                     blocks.add(packed);
                 }
             }
         }
+    
         
         
 
