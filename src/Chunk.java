@@ -22,7 +22,9 @@ public class Chunk {
     private ArrayList<Vector3> vertex_data = new ArrayList<>();
     private ArrayList<Vector3> color_data = new ArrayList<>();
     private int vbo_id, cbo_id, vertex_count;
-    private Set<Integer> blocks = new HashSet<>();
+    //private Set<Integer> grass_blocks = new HashSet<>();
+    private Map<Integer, Byte> blocks = new HashMap<>();
+
     private int chunk_size = Main.CHUNK_SIZE;
 
     private ArrayList<Vector3i> offsets = new ArrayList<>(Arrays.asList(
@@ -88,21 +90,29 @@ public class Chunk {
         return map;
     }
 // CREATES FACE COLORS
-    private ArrayList<Double> face_color(int face_num) {
+    private ArrayList<Double> face_color(int face_num,int block_type) {
         ArrayList<Double> base_color = new ArrayList<>();
-       // Base RGB color components
-        final double BASE_R = 70f/255;
-        final double BASE_G = 90f/255f;
-        final double BASE_B = 80f/255f;
+        double BASE_R;
+        double BASE_G;
+        double BASE_B;
+        if (block_type == 0) { // Grass
+            BASE_R = 30f/255;
+            BASE_G = 70f/255f;
+            BASE_B = 40f/255f;
+        } else { // Example
+            BASE_R = 30f/255;
+            BASE_G = 70f/255f;
+            BASE_B = 40f/255f;
+        }
 
         // Brightness multipliers per face
         double multiplier;
         if (face_num == 0) {
-            multiplier = 1.4;
+            multiplier = 1.2;
         } else if (face_num == 1) {
-            multiplier = 0.4;
-        } else if (face_num == 2 || face_num == 3) {
             multiplier = 0.6;
+        } else if (face_num == 2 || face_num == 3) {
+            multiplier = 0.8;
         } else {
             multiplier = 1.0;
         }
@@ -141,6 +151,7 @@ public class Chunk {
         return (x & 0x7F)       // bits 0-5
             | ((y & 0x7F) << 7)  // bits 6-11
             | ((z & 0x7F) << 14); // bits 12-17
+
     }
 // UNFLATTENS BLOCK DATA
     public int getX(int packed) {
@@ -165,10 +176,10 @@ public class Chunk {
 
                 float noise = PerlinNoise.perlin(worldX / scale, worldZ / scale);
                 int height = (int)(noise * noise * 128);
-
-                for (int y = height-1; y <= height; y++) {
+                
+                for (int y = 0; y <= height; y++) {
                     int packed = packPos(x, y, z);
-                    blocks.add(packed);
+                    blocks.put(packed,(byte) 0);
                 }
             }
         }
@@ -177,7 +188,7 @@ public class Chunk {
         
 
 
-        for (int block : blocks) {
+        for (int block : blocks.keySet()) {
             int bx = getX(block), by = getY(block), bz = getZ(block);
             for (int face = 0; face < 6; face++) {
                 if (face == 1) continue;  // Optional: skip bottom faces
@@ -190,12 +201,13 @@ public class Chunk {
                 int ny = by + oy;
                 int nz = bz + oz;
 
-                // Check boundaries before checking blocks list
+                // Check boundaries before checking grass_grass_blocks list
                 if (nx >= 0 && nx < chunk_size &&
                     ny >= 0 && ny < chunk_size &&
                     nz >= 0 && nz < chunk_size) {
                     // Neighbor is inside the chunk
-                    if (blocks.contains(packPos(nx, ny, nz))) {
+                           
+                    if (blocks.containsKey(packPos(nx, ny, nz))) {
                         continue; // Skip face if neighbor is filled
                     }
                 }
@@ -214,7 +226,7 @@ public class Chunk {
                 }
 
 
-                ArrayList<Double> colorList = face_color(face);
+                ArrayList<Double> colorList = face_color(face,0);
                 Vector3 colorVector = new Vector3(colorList.get(0), colorList.get(1), colorList.get(2));
                 for (int c = 0; c < 4; c++) {
                     color_data.add(colorVector);
@@ -244,7 +256,7 @@ public class Chunk {
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
-
+// REMDERS CHUNK
    public void render(boolean wireframe) {
     glEnableClientState(GL_VERTEX_ARRAY);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_id);

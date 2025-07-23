@@ -1,7 +1,4 @@
-Structure
 
-
-Spit meshes with culling and non cullin
 
 | Face Name  | Common Number |
 | ---------- | ------------- |
@@ -11,6 +8,18 @@ Spit meshes with culling and non cullin
 | **Right**  | 3             |
 | **Front**  | 4             |
 | **Back**   | 5             |
+
+| Block      | Common Number |
+| ---------- | ------------- |
+| **Grass**  | 0             |
+| **Bottom** | 1             |
+| **Left**   | 2             |
+| **Right**  | 3             |
+| **Front**  | 4             |
+| **Back**   | 5             |
+
+
+
 
 
 
@@ -76,7 +85,7 @@ Breakdown:
 
 Example from a real Java program:
 
-private jjjujjjjvoid init() {
+private void init() {
     // Set up a game window here
 }
 

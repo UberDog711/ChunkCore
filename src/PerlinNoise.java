@@ -51,8 +51,8 @@ public class PerlinNoise {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                float amplitude = 1;
-                float frequency = 1;
+                float amplitude = 10;
+                float frequency = 2;
                 float noiseHeight = 0;
 
                 for (int o = 0; o < octaves; o++) {

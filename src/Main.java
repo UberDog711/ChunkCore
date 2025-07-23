@@ -23,7 +23,7 @@ public class Main {
     private CameraController camera;
 
     public static  int CHUNK_SIZE = 128;  // you can change this later
-    public static  int RENDER_DISTANCE = 16;
+    public static  int RENDER_DISTANCE = 1;
     private ArrayList<Chunk> chunks = new ArrayList<>();
     public static boolean wireframe = false;
     public void run() {
@@ -64,7 +64,7 @@ public class Main {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
-        glClearColor(0.0f, 40f/255f,40f/255f, 1.0f); // sky color
+        glClearColor(0.0f, 0f/255f,0f/255f, 1.0f); // sky color
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         float aspect = 1280f / 720f;
