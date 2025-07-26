@@ -15,3 +15,11 @@ With Minor Changes
 | 256            | 8             | 24         | Yes                 | 0xFF (255 decimal)          | Big chunks possible          |
 | 512            | 9             | 27         | Yes                 | 0x1FF (511 decimal)         | Still fits in 32-bit int     |
 | 1024           | 10            | 30         | Yes                 | 0x3FF (1023 decimal)        | Max practical for 32-bit int |
+
+
+
+
+12 remder = 8.2  gb = 625  chunks = 15.72 seconds
+16 render = 11.9 gb = 1089 chunks = 28.10 seconds
+20 render = 00.0 gb = 1681 chunks = nope no work x a  
+

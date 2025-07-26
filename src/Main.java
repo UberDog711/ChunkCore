@@ -1,21 +1,9 @@
-import org.lwjgl.*;
-import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.nio.FloatBuffer;
-
-
-
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.opengl.GL15.*;
 import static org.lwjgl.system.MemoryUtil.*;
-import org.lwjgl.BufferUtils;
  
 public class Main {
 
@@ -23,7 +11,7 @@ public class Main {
     private CameraController camera;
 
     public static  int CHUNK_SIZE = 128;  // you can change this later
-    public static  int RENDER_DISTANCE = 1;
+    public static  int RENDER_DISTANCE = 16;
     private ArrayList<Chunk> chunks = new ArrayList<>();
     public static boolean wireframe = false;
     public void run() {
@@ -114,8 +102,8 @@ public class Main {
                 System.out.println("FPS: " + frames);
                 frames = 0;
                 lastTime = currentTime;
-                System.out.println("Position: X=" + (camera.cameraPos[0]) + " Y=" + (camera.cameraPos[1]) + " Z=" + (camera.cameraPos[2]));
-                System.out.println("Rotation X=" + (camera.cameraRotation[0]) + " Y=" + (camera.cameraRotation[1]));
+                //System.out.println("Position: X=" + (camera.cameraPos[0]) + " Y=" + (camera.cameraPos[1]) + " Z=" + (camera.cameraPos[2]));
+                //System.out.println("Rotation X=" + (camera.cameraRotation[0]) + " Y=" + (camera.cameraRotation[1]));
             }
 
         }

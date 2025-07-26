@@ -37,37 +37,48 @@ public class PerlinNoise {
         }
     }
 
-    public static float[][] generateNoiseMap(int width, int height, float scale, int seed, int octaves, float persistence, float lacunarity) {
+    public static float[][] generateNoiseMap(int width, int height, float scale, int seed, int octaves, float persistence, float lacunarity, int worldOffsetX, int worldOffsetY) {
         float[][] noiseMap = new float[height][width];
         java.util.Random rand = new java.util.Random(seed);
-        float[] octaveOffsetsX = new float[octaves];
+        float[] octaveOffsetsX = new float[octaves];    
         float[] octaveOffsetsY = new float[octaves];
         for (int i = 0; i < octaves; i++) {
-            octaveOffsetsX[i] = rand.nextFloat() * 20000 - 10000;
-            octaveOffsetsY[i] = rand.nextFloat() * 20000 - 10000;
+            octaveOffsetsX[i] = rand.nextFloat() * 20000f - 10000f;
+            octaveOffsetsY[i] = rand.nextFloat() * 20000f - 10000f;
         }
 
         if (scale <= 0) scale = 0.0001f;
 
+        // Calculate max possible amplitude for normalization
+        float maxAmplitude = 0f;
+        float amp = 1f;
+        for (int i = 0; i < octaves; i++) {
+            maxAmplitude += amp;
+            amp *= persistence;
+        }
+
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                float amplitude = 10;
-                float frequency = 2;
-                float noiseHeight = 0;
+                float amplitude = 1f;
+                float frequency = 0.001f;
+                float noiseHeight = 0f;
 
                 for (int o = 0; o < octaves; o++) {
-                    float sampleX = (x + octaveOffsetsX[o]) / scale * frequency;
-                    float sampleY = (y + octaveOffsetsY[o]) / scale * frequency;
+                    float sampleX = ((x + worldOffsetX) / scale) * frequency + octaveOffsetsX[o];
+                    float sampleY = ((y + worldOffsetY) / scale) * frequency + octaveOffsetsY[o];
 
-                    float perlinValue = perlin(sampleX, sampleY) * 2 - 1;
+                    float perlinValue = perlin(sampleX, sampleY) * 2f - 1f;
                     noiseHeight += perlinValue * amplitude;
 
                     amplitude *= persistence;
                     frequency *= lacunarity;
                 }
 
-                // Normalize to 0 - 1
-                noiseMap[y][x] = (noiseHeight + 1) / 2f;
+                // Normalize noiseHeight to 0-1 range based on max amplitude sum
+                float normalizedHeight = (noiseHeight + maxAmplitude) / (2f * maxAmplitude);
+
+                // Scale to desired range (-100 to 100)
+                noiseMap[y][x] = normalizedHeight * 200f - 100f;
             }
         }
 
@@ -85,7 +96,7 @@ public class PerlinNoise {
     private static float grad(int hash, float x, float y) {
         int h = hash & 15;
         float u = h < 8 ? x : y;
-        float v = h < 4 ? y : h == 12 || h == 14 ? x : 0;
+        float v = h < 4 ? y : (h == 12 || h == 14 ? x : 0);
         return ((h & 1) == 0 ? u : -u) + ((h & 2) == 0 ? v : -v);
     }
 

@@ -1,14 +1,10 @@
-import org.lwjgl.*;
-import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.*;
 import java.util.*;
 import java.nio.FloatBuffer;
 
-import static org.lwjgl.glfw.GLFW.*;
+//import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
-import static org.lwjgl.system.MemoryUtil.*;
+//import static org.lwjgl.system.MemoryUtil.*;
 import org.lwjgl.BufferUtils;
 
 public class Chunk {
@@ -165,25 +161,73 @@ public class Chunk {
     }
 // CREATES CHUNK
     public void create_world() {
-        
+
+       
+        // Noise settings matching your Python code
         float scale = 150f;
+        int seed = 0; // base in python pnoise2 base=0
+        int octaves = 2;
+        float persistence = 0.5f;
+        float lacunarity = 0.5f;
 
-        for (int x = 0; x < chunk_size; x++) {
-            for (int z = 0; z < chunk_size; z++) {
-                // Convert chunk coords to world coords
-                float worldX = (this.x) + x;
-                float worldZ = (this.z) + z;
+        int baseX = this.x;
+        int baseZ = this.z;
 
-                float noise = PerlinNoise.perlin(worldX / scale, worldZ / scale);
-                int height = (int)(noise * noise * 128);
-                
-                for (int y = 0; y <= height; y++) {
-                    int packed = packPos(x, y, z);
-                    blocks.put(packed,(byte) 0);
+        for (int localX = 0; localX < chunk_size; localX++) {
+            for (int localZ = 0; localZ < chunk_size; localZ++) {
+                int worldX = baseX + localX;
+                int worldZ = baseZ + localZ;
+
+                float baseNoise = 0;
+
+                // Calculate combined octave noise with offsets like Python's pnoise2 does internally
+                float amplitude = 1f;
+                float frequency = 1f;
+                float noiseHeight = 0f;
+
+                // You can generate offsets per octave to mimic Python's base param better if you want:
+                Random rand = new Random(seed);
+                float[] octaveOffsetsX = new float[octaves];
+                float[] octaveOffsetsY = new float[octaves];
+                for (int i = 0; i < octaves; i++) {
+                    octaveOffsetsX[i] = rand.nextFloat() * 20000 - 10000;
+                    octaveOffsetsY[i] = rand.nextFloat() * 20000 - 10000;
+                }
+
+                for (int o = 0; o < octaves; o++) {
+                    float sampleX = (worldX / scale) * frequency + octaveOffsetsX[o];
+                    float sampleZ = (worldZ / scale) * frequency + octaveOffsetsY[o];
+                    float perlinValue = PerlinNoise.perlin(sampleX, sampleZ) * 2f - 1f;
+                    noiseHeight += perlinValue * amplitude;
+
+                    amplitude *= persistence;
+                    frequency *= lacunarity;
+                }
+                baseNoise = noiseHeight;
+
+                // Apply the Python equivalent: val = 1 + base_noise
+                float val = 1f + baseNoise;
+
+                // height = int(val^2 * 64)
+                int height = (int)(val * val * 32f);
+
+                // Clamp height if necessary
+                if (height < 0) height = 0;
+                if (height > 127) height = 127;
+
+                // Add blocks for the column, you can adjust the fill depth here
+                for (int y = height - 4; y <= height; y++) {
+                    if (y < 0) continue;
+                    int packed = packPos(localX, y, localZ);
+                    blocks.put(packed, (byte) 0);
                 }
             }
         }
     
+
+   
+
+
         
         
 
