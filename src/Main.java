@@ -11,8 +11,11 @@ public class Main {
 
 
     private long window;
-    private CameraController camera;
-    Player my;
+
+    private Player my = new Player();;
+    private Renderer renderer;
+
+
 
     private ArrayList<Chunk> chunks = new ArrayList<>();
     public static boolean wireframe = false;
@@ -26,44 +29,12 @@ public class Main {
         glfwDestroyWindow(window);
         glfwTerminate();
     }
-    public void perspectiveGL(double fovY, double aspect, double zNear, double zFar) {
-    double fH = Math.tan(Math.toRadians(fovY / 2)) * zNear;
-    double fW = fH * aspect;
-    glFrustum(-fW, fW, -fH, fH, zNear, zFar);
-    }
 
     private void init() {
+        renderer = new Renderer();
 
 
-        if (!glfwInit()) {
-            throw new IllegalStateException("Unable to initialize GLFW");
-        }
 
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-        window = glfwCreateWindow(Constants.RESOLUTION_X, Constants.RESOLUTION_Y, "Voxel Engine", NULL, NULL);
-        if (window == NULL) {
-            throw new RuntimeException("Failed to create window");
-        }
-
-        glfwMakeContextCurrent(window);
-        glfwSwapInterval(1);  // enable v-sync
-        glfwShowWindow(window);
-
-        GL.createCapabilities();
-
-        // Very basic OpenGL setup
-        glEnable(GL_DEPTH_TEST);
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-        glClearColor((float) 153 / 255, (float) 153 / 255, (float) 255 / 255, 1.0f); // sky color
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        float aspect = 1280f / 720f;
-        perspectiveGL(Constants.FOV, aspect, 0.1f, 4800.0f);
-        glMatrixMode(GL_MODELVIEW);
-
-        camera = new CameraController();
-        my = new Player();
         // Create chunks
         double tot = ((Constants.RENDER_DISTANCE * 2)+1) * ((Constants.RENDER_DISTANCE * 2) +1);
         double cur = 0;
@@ -73,7 +44,7 @@ public class Main {
                 chunk.create_world();
                 chunks.add(chunk);
                 cur ++;
-                System.out.println(cur/tot*100);
+                System.out.println(cur/tot*100 + "% : Done");
             }
         }
         double end_start_time = glfwGetTime();
@@ -86,19 +57,12 @@ public class Main {
 
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            
             glLoadIdentity();
-            //camera.handleKeys(window);
-            //camera.handleMouse(window);
+
             my.handleInputs(window);
+            renderer.loop(chunks);
 
-            // Render all chunks
-            for (Chunk chunk : chunks) {
-                chunk.render(wireframe);
-            }
 
-            glfwSwapBuffers(window);
-            glfwPollEvents();
 
             // FPS Counter logic
             frames++;
@@ -115,7 +79,7 @@ public class Main {
     }
 
 
-    public static void main(String[] args) {
+    public static void main() {
         new Main().run();
     }
 }

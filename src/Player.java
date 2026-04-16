@@ -44,6 +44,9 @@ public class Player {
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
             moveRight();
         }
+        if (glfwGetKey(window,GLFW_KEY_Q) == GLFW_PRESS) {
+            Main.wireframe = ! Main.wireframe;
+        }
 
         handleMouse(window);
 
@@ -57,28 +60,6 @@ public class Player {
         glRotatef(playerRot[1], 1f, 0f, 0f); // pitch
         glRotatef(playerRot[0], 0f, 1f, 0f); // yaw
         glTranslatef(-playerPos[0], -playerPos[1], -playerPos[2]);
-    }
-
-
-    private void moveForward () {
-        playerVel_Per_Second[0] += (float) (Math.sin(yawRad) * deltaSpeed);
-        playerVel_Per_Second[1] -= (float) (Math.tan(pitchRad) * deltaSpeed);
-        playerVel_Per_Second[2] -= (float) (Math.cos(yawRad) * deltaSpeed);
-    }
-    private void moveBack () {
-        playerVel_Per_Second[0] -= (float) (Math.sin(yawRad) * deltaSpeed);
-        playerVel_Per_Second[1] += (float) (Math.tan(pitchRad) * deltaSpeed);
-        playerVel_Per_Second[2] += (float) (Math.cos(yawRad) * deltaSpeed);
-    }
-    private void moveLeft () {
-        double leftYaw = yawRad - Math.PI / 2;
-        playerVel_Per_Second[0] += (float) (Math.sin(leftYaw) * deltaSpeed);
-        playerVel_Per_Second[2] -= (float) (Math.cos(leftYaw) * deltaSpeed);
-    }
-    private void moveRight () {
-        double rightYaw = yawRad + Math.PI / 2;
-        playerVel_Per_Second[0] += (float) (Math.sin(rightYaw) * deltaSpeed);
-        playerVel_Per_Second[2] -= (float) (Math.cos(rightYaw) * deltaSpeed);
     }
 
     private void handleMouse (long window) {
@@ -105,4 +86,27 @@ public class Player {
         glfwSetCursorPos(window, centerX, centerY);
 
     }
+
+    private void moveForward () {
+        playerVel_Per_Second[0] += (float) (Math.sin(yawRad) * deltaSpeed);
+        playerVel_Per_Second[1] -= (float) (Math.tan(pitchRad) * deltaSpeed);
+        playerVel_Per_Second[2] -= (float) (Math.cos(yawRad) * deltaSpeed);
+    }
+    private void moveBack () {
+        playerVel_Per_Second[0] -= (float) (Math.sin(yawRad) * deltaSpeed);
+        playerVel_Per_Second[1] += (float) (Math.tan(pitchRad) * deltaSpeed);
+        playerVel_Per_Second[2] += (float) (Math.cos(yawRad) * deltaSpeed);
+    }
+    private void moveLeft () {
+        double leftYaw = yawRad - Math.PI / 2;
+        playerVel_Per_Second[0] += (float) (Math.sin(leftYaw) * deltaSpeed);
+        playerVel_Per_Second[2] -= (float) (Math.cos(leftYaw) * deltaSpeed);
+    }
+    private void moveRight () {
+        double rightYaw = yawRad + Math.PI / 2;
+        playerVel_Per_Second[0] += (float) (Math.sin(rightYaw) * deltaSpeed);
+        playerVel_Per_Second[2] -= (float) (Math.cos(rightYaw) * deltaSpeed);
+    }
+
+
 }

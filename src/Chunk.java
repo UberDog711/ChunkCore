@@ -216,7 +216,7 @@ public class Chunk {
                 if (height > 127) height = 127;
 
                 // Add blocks for the column, you can adjust the fill depth here
-                for (int y = height - 4; y <= height; y++) {
+                for (int y = height - 2; y <= height; y++) {
                     if (y < 0) continue;
                     int packed = packPos(localX, y, localZ);
                     blocks.put(packed, (byte) 0);
@@ -312,7 +312,7 @@ public class Chunk {
 
     if (wireframe) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glLineWidth(8);
+        glLineWidth(1);
     } else {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }

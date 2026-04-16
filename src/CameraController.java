@@ -56,18 +56,6 @@ public class CameraController {
             cameraPos[1] -= speed;
         }
 
-        if (q && ! prevQ) {
-            if (Main.wireframe == true) {
-                Main.wireframe = false;
-            } else {
-                Main.wireframe = true;
-            }
-            System.out.println( Main.wireframe);
-            
-            
-        }
-        prevQ = q;
-        // rest of key handling...
     }
             
 
