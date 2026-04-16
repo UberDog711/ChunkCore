@@ -21,7 +21,7 @@ public class Chunk {
     //private Set<Integer> grass_blocks = new HashSet<>();
     private Map<Integer, Byte> blocks = new HashMap<>();
 
-    private int chunk_size = Main.CHUNK_SIZE;
+    private int chunk_size = Constants.CHUNK_SIZE;
 
     private ArrayList<Vector3i> offsets = new ArrayList<>(Arrays.asList(
         new Vector3i(0, 1, 0), new Vector3i(0, -1, 0),
@@ -92,9 +92,9 @@ public class Chunk {
         double BASE_G;
         double BASE_B;
         if (block_type == 0) { // Grass
-            BASE_R = 30f/255;
-            BASE_G = 70f/255f;
-            BASE_B = 40f/255f;
+            BASE_R = 35f/255;
+            BASE_G = 74f/255f;
+            BASE_B = 57f/255f;
         } else { // Example
             BASE_R = 30f/255;
             BASE_G = 70f/255f;
@@ -312,7 +312,7 @@ public class Chunk {
 
     if (wireframe) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glLineWidth(1);
+        glLineWidth(8);
     } else {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }

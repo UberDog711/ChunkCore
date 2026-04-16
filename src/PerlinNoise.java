@@ -1,3 +1,5 @@
+import java.util.Vector;
+
 public class PerlinNoise {
 
     private static final int[] permutation = {
@@ -59,9 +61,9 @@ public class PerlinNoise {
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                float amplitude = 1f;
+                float amplitude = 20f;
                 float frequency = 0.001f;
-                float noiseHeight = 0f;
+                float noiseHeight = 1f;
 
                 for (int o = 0; o < octaves; o++) {
                     float sampleX = ((x + worldOffsetX) / scale) * frequency + octaveOffsetsX[o];
@@ -73,7 +75,7 @@ public class PerlinNoise {
                     amplitude *= persistence;
                     frequency *= lacunarity;
                 }
-
+                
                 // Normalize noiseHeight to 0-1 range based on max amplitude sum
                 float normalizedHeight = (noiseHeight + maxAmplitude) / (2f * maxAmplitude);
 

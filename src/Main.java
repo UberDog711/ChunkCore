@@ -1,4 +1,6 @@
 import org.lwjgl.opengl.*;
+import org.lwjgl.system.Configuration;
+
 import java.util.ArrayList;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
@@ -7,11 +9,11 @@ import static org.lwjgl.system.MemoryUtil.*;
  
 public class Main {
 
+
     private long window;
     private CameraController camera;
+    Player my;
 
-    public static  int CHUNK_SIZE = 128;  // you can change this later
-    public static  int RENDER_DISTANCE = 16;
     private ArrayList<Chunk> chunks = new ArrayList<>();
     public static boolean wireframe = false;
     public void run() {
@@ -20,6 +22,7 @@ public class Main {
         loop();
 
         glfwFreeCallbacks(window);
+
         glfwDestroyWindow(window);
         glfwTerminate();
     }
@@ -30,14 +33,14 @@ public class Main {
     }
 
     private void init() {
-        
-        
+
+
         if (!glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
 
         glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
-        window = glfwCreateWindow(1280, 720, "Voxel Engine", NULL, NULL);
+        window = glfwCreateWindow(Constants.RESOLUTION_X, Constants.RESOLUTION_Y, "Voxel Engine", NULL, NULL);
         if (window == NULL) {
             throw new RuntimeException("Failed to create window");
         }
@@ -52,20 +55,21 @@ public class Main {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
         glCullFace(GL_BACK);
-        glClearColor(0.0f, 0f/255f,0f/255f, 1.0f); // sky color
+        glClearColor((float) 153 / 255, (float) 153 / 255, (float) 255 / 255, 1.0f); // sky color
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
         float aspect = 1280f / 720f;
-        perspectiveGL(90.0f, aspect, 0.1f, 4800.0f);
+        perspectiveGL(Constants.FOV, aspect, 0.1f, 4800.0f);
         glMatrixMode(GL_MODELVIEW);
 
         camera = new CameraController();
+        my = new Player();
         // Create chunks
-        double tot = (RENDER_DISTANCE*2+1) * (RENDER_DISTANCE * 2+1);
+        double tot = ((Constants.RENDER_DISTANCE * 2)+1) * ((Constants.RENDER_DISTANCE * 2) +1);
         double cur = 0;
-        for (int cx = -RENDER_DISTANCE; cx <= RENDER_DISTANCE; cx++) {
-            for (int cz = -RENDER_DISTANCE; cz <= RENDER_DISTANCE; cz++) {
-                Chunk chunk = new Chunk(cx * CHUNK_SIZE, cz * CHUNK_SIZE);
+        for (int cx = -Constants.RENDER_DISTANCE; cx <= Constants.RENDER_DISTANCE; cx++) {
+            for (int cz = -Constants.RENDER_DISTANCE; cz <= Constants.RENDER_DISTANCE; cz++) {
+                Chunk chunk = new Chunk(cx * Constants.CHUNK_SIZE, cz * Constants.CHUNK_SIZE);
                 chunk.create_world();
                 chunks.add(chunk);
                 cur ++;
@@ -84,8 +88,9 @@ public class Main {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             
             glLoadIdentity();
-            camera.handleKeys(window);
-            camera.handleMouse(window);
+            //camera.handleKeys(window);
+            //camera.handleMouse(window);
+            my.handleInputs(window);
 
             // Render all chunks
             for (Chunk chunk : chunks) {

@@ -6,9 +6,9 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 public class CameraController {
     public float[] cameraPos = new float[] {0f, 0f, 0f};    // x, y, z
     public float[] cameraRotation = new float[] {0f, 0f};  // yaw (around y), pitch (around x)
-   
+
     private double lastFrameTime;
-    private float movementSpeed = 160f;
+    private float movementSpeed = Constants.MAX_MOVEMENT_SPEED;
     private boolean prevQ = false;
 
     public void handleKeys(long window) {
@@ -76,14 +76,14 @@ public class CameraController {
         double[] ypos = new double[1];
         glfwGetCursorPos(window, xpos, ypos);
 
-        // Calculate delta from center (assuming 800x600 window)
-        double centerX = 640;
-        double centerY = 360;
+
+        double centerX = Constants.RESOLUTION_X / 2;
+        double centerY = Constants.RESOLUTION_Y / 2;
 
         double deltaX = xpos[0] - centerX;
         double deltaY = ypos[0] - centerY;
 
-        float sensitivity = 0.2f;
+        float sensitivity = Constants.SENSITIVITY;
 
         cameraRotation[0] += (float)(deltaX * sensitivity);
         cameraRotation[1] -= (float)(-deltaY * sensitivity);  // usually invert Y
