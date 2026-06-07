@@ -10,7 +10,7 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Main {
 
 
-    private long window;
+    private long window = 0;
 
     private Player my = new Player();;
     private Renderer renderer;
@@ -54,13 +54,15 @@ public class Main {
     private void loop() {
         double lastTime = glfwGetTime();
         int frames = 0;
-
-        while (!glfwWindowShouldClose(window)) {
+        //!glfwWindowShouldClose(window)
+        while (true) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glLoadIdentity();
-
-            my.handleInputs(window);
+            System.out.println("Called loop:");
             renderer.loop(chunks);
+            System.out.println("Rendered:");
+            my.handleInputs(window);
+            System.out.println("Handled Inputs:");
 
 
 
@@ -83,3 +85,4 @@ public class Main {
         new Main().run();
     }
 }
+    `

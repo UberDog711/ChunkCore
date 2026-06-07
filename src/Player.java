@@ -30,7 +30,7 @@ public class Player {
         deltaSpeed = (float) (deltaTime * Constants.ACCELERATION_SPEED);
         yawRad = Math.toRadians(playerRot[0]);
         pitchRad = Math.toRadians(playerRot[1]);
-
+        System.out.println("1");
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
             moveForward();
@@ -53,7 +53,7 @@ public class Player {
         for (int i = 0; i < 3; i++) {
             playerVel_Per_Second[i] = Math.clamp(playerVel_Per_Second[i],-Constants.MAX_MOVEMENT_SPEED,Constants.MAX_MOVEMENT_SPEED);
             playerVel_Per_Second[i] *= (float) (1f - Constants.DECELERATION_SPEED * deltaTime);
-            playerPos[i] += ((playerVel_Per_Second[i]) * deltaTime);
+            playerPos[i] += (float) ((playerVel_Per_Second[i]) * deltaTime);
         }
 
         glLoadIdentity();
@@ -68,8 +68,8 @@ public class Player {
 
         glfwGetCursorPos(window, xpos, ypos);
 
-        double centerX = Constants.RESOLUTION_X / 2;
-        double centerY = Constants.RESOLUTION_Y / 2;
+        double centerX = (double) Constants.RESOLUTION_X / 2;
+        double centerY = (double) Constants.RESOLUTION_Y / 2;
 
         double deltaX = xpos[0] - centerX;
         double deltaY = ypos[0] - centerY;
