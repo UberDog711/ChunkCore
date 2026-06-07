@@ -160,123 +160,60 @@ public class Chunk {
         return (packed >> 14) & 0x7F;
     }
 // CREATES CHUNK
-    public void create_world() {
+    public void create_world(int[][] blocks) {
 
-       
-        // Noise settings matching your Python code
-        float scale = 150f;
-        int seed = 0; // base in python pnoise2 base=0
-        int octaves = 2;
-        float persistence = 0.5f;
-        float lacunarity = 0.5f;
+        int by;
 
-        int baseX = this.x;
-        int baseZ = this.z;
+        for (int bx = 0; bx < chunk_size; bx ++) {
+            for (int bz = 0; bz < chunk_size; bz ++) {
 
-        for (int localX = 0; localX < chunk_size; localX++) {
-            for (int localZ = 0; localZ < chunk_size; localZ++) {
-                int worldX = baseX + localX;
-                int worldZ = baseZ + localZ;
+                by = blocks[bx][bz];
+                for (int face = 0; face < 6; face++) {
+                    if (face == 1) continue;  // Optional: skip bottom faces
 
-                float baseNoise = 0;
+                    Vector3i offset = offsets.get(face);
+                    int ox = offset.x, oy = offset.y, oz = offset.z;
 
-                // Calculate combined octave noise with offsets like Python's pnoise2 does internally
-                float amplitude = 1f;
-                float frequency = 1f;
-                float noiseHeight = 0f;
+                    // Get neighbor position
+                    int nx = bx + ox;
+                    int ny = by + oy;
+                    int nz = bz + oz;
 
-                // You can generate offsets per octave to mimic Python's base param better if you want:
-                Random rand = new Random(seed);
-                float[] octaveOffsetsX = new float[octaves];
-                float[] octaveOffsetsY = new float[octaves];
-                for (int i = 0; i < octaves; i++) {
-                    octaveOffsetsX[i] = rand.nextFloat() * 20000 - 10000;
-                    octaveOffsetsY[i] = rand.nextFloat() * 20000 - 10000;
-                }
+                    // Check boundaries before checking grass_grass_blocks list
+                    if (nx >= 0 && nx < chunk_size &&
+                            ny >= 0 && ny < chunk_size &&
+                            nz >= 0 && nz < chunk_size) {
+                        // Neighbor is inside the chunk
 
-                for (int o = 0; o < octaves; o++) {
-                    float sampleX = (worldX / scale) * frequency + octaveOffsetsX[o];
-                    float sampleZ = (worldZ / scale) * frequency + octaveOffsetsY[o];
-                    float perlinValue = PerlinNoise.perlin(sampleX, sampleZ) * 2f - 1f;
-                    noiseHeight += perlinValue * amplitude;
+                        blocks[bx][bz]
+                        if (blocks.containsKey(packPos(nx, ny, nz))) {
+                            continue; // Skip face if neighbor is filled
+                        }
+                    }
 
-                    amplitude *= persistence;
-                    frequency *= lacunarity;
-                }
-                baseNoise = noiseHeight;
-
-                // Apply the Python equivalent: val = 1 + base_noise
-                float val = 1f + baseNoise;
-
-                // height = int(val^2 * 64)
-                int height = (int)(val * val * 32f);
-
-                // Clamp height if necessary
-                if (height < 0) height = 0;
-                if (height > 127) height = 127;
-
-                // Add blocks for the column, you can adjust the fill depth here
-//                for (int y = height - 2; y <= height; y++) {
-                if (height < 0) continue;
-                int packed = packPos(localX, height, localZ);
-                blocks.put(packed, (byte) 0);
-
-            }
-        }
-    
-
-   
+                    // If we reach here, we draw the face — either empty neighbor OR outside chunk
 
 
-        
-        
+
+                    Vector3[] face_vertices = FACE_DEFS.get(face);
+                    for (Vector3 v : face_vertices) {
+                        vertex_data.add(new Vector3(
+                                v.x + bx + this.x,
+                                v.y + by,
+                                v.z + bz + this.z
+                        ));
+                    }
 
 
-        for (int block : blocks.keySet()) {
-            int bx = getX(block), by = getY(block), bz = getZ(block);
-            for (int face = 0; face < 6; face++) {
-                if (face == 1) continue;  // Optional: skip bottom faces
-
-                Vector3i offset = offsets.get(face);
-                int ox = offset.x, oy = offset.y, oz = offset.z;
-
-                // Get neighbor position
-                int nx = bx + ox;
-                int ny = by + oy;
-                int nz = bz + oz;
-
-                // Check boundaries before checking grass_grass_blocks list
-                if (nx >= 0 && nx < chunk_size &&
-                    ny >= 0 && ny < chunk_size &&
-                    nz >= 0 && nz < chunk_size) {
-                    // Neighbor is inside the chunk
-                           
-                    if (blocks.containsKey(packPos(nx, ny, nz))) {
-                        continue; // Skip face if neighbor is filled
+                    ArrayList<Double> colorList = face_color(face,0);
+                    Vector3 colorVector = new Vector3(colorList.get(0), colorList.get(1), colorList.get(2));
+                    for (int c = 0; c < 4; c++) {
+                        color_data.add(colorVector);
                     }
                 }
-
-                // If we reach here, we draw the face — either empty neighbor OR outside chunk
-
-
-
-                Vector3[] face_vertices = FACE_DEFS.get(face);
-                for (Vector3 v : face_vertices) {
-                    vertex_data.add(new Vector3(
-                        v.x + bx + this.x,
-                        v.y + by,
-                        v.z + bz + this.z
-                    ));
-                }
-
-
-                ArrayList<Double> colorList = face_color(face,0);
-                Vector3 colorVector = new Vector3(colorList.get(0), colorList.get(1), colorList.get(2));
-                for (int c = 0; c < 4; c++) {
-                    color_data.add(colorVector);
-                }
             }
         }
+
 
         float[] flat_vertices = flattenVertexData(vertex_data);
         float[] flat_colors = flattenColorData(color_data);
