@@ -12,7 +12,7 @@ public class Player {
     private float[] playerRot = new float[] {0.0f, 0.0f};
     private double yawRad;
     private double pitchRad;
-
+    private long window;
 
     private double deltaTime;
     private double currentTime;
@@ -23,14 +23,18 @@ public class Player {
     public float[] getPlayerPos () {return playerPos;}
     public float[] getPlayerRot () {return playerRot;}
 
-    public void handleInputs(long window) {
+    public Player (long window) {
+        this.window = window;
+    }
+
+    public void handleInputs() {
         currentTime = glfwGetTime();
         deltaTime = currentTime - lastFrameTime;
         lastFrameTime = currentTime;
         deltaSpeed = (float) (deltaTime * Constants.ACCELERATION_SPEED);
         yawRad = Math.toRadians(playerRot[0]);
         pitchRad = Math.toRadians(playerRot[1]);
-        System.out.println("1");
+
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
             moveForward();

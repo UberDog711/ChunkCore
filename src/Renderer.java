@@ -43,6 +43,11 @@ public class Renderer {
         glMatrixMode(GL_MODELVIEW);
         glfwSwapInterval(0);
     }
+
+    public long getWindowID() {
+        return window;
+    }
+
     private void perspectiveGL(double fovY, double aspect, double zNear, double zFar) {
         double fH = Math.tan(Math.toRadians(fovY / 2)) * zNear;
         double fW = fH * aspect;

@@ -10,14 +10,13 @@ import static org.lwjgl.system.MemoryUtil.*;
 public class Main {
 
 
-    private long window = 0;
-
-    private Player my = new Player();;
+    private long window;
+    private Player my;
     private Renderer renderer;
     public ArrayList<Chunk> chunks = new ArrayList<Chunk>();
 
 
-    public void run() {
+    public void main() {
         init();
         
         loop();
@@ -30,6 +29,7 @@ public class Main {
 
     private void init() {
         renderer = new Renderer();
+        my = new Player(renderer.getWindowID());
 
 
 
@@ -56,11 +56,10 @@ public class Main {
         while (true) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glLoadIdentity();
-            System.out.println("Called loop:");
+
+            my.handleInputs();
             renderer.loop(chunks);
-            System.out.println("Rendered:");
-            my.handleInputs(window);
-            System.out.println("Handled Inputs:");
+
 
 
 
@@ -74,13 +73,6 @@ public class Main {
                 //System.out.println("Position: X=" + (camera.cameraPos[0]) + " Y=" + (camera.cameraPos[1]) + " Z=" + (camera.cameraPos[2]));
                 //System.out.println("Rotation X=" + (camera.cameraRotation[0]) + " Y=" + (camera.cameraRotation[1]));
             }
-
         }
     }
-
-
-    public static void main() {
-        new Main().run();
-    }
 }
-    `
