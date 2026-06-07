@@ -44,9 +44,6 @@ public class Player {
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
             moveRight();
         }
-        if (glfwGetKey(window,GLFW_KEY_Q) == GLFW_PRESS) {
-            Main.wireframe = ! Main.wireframe;
-        }
 
         handleMouse(window);
 

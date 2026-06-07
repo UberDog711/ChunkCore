@@ -14,11 +14,9 @@ public class Main {
 
     private Player my = new Player();;
     private Renderer renderer;
+    public ArrayList<Chunk> chunks = new ArrayList<Chunk>();
 
 
-
-    private ArrayList<Chunk> chunks = new ArrayList<>();
-    public static boolean wireframe = false;
     public void run() {
         init();
         
