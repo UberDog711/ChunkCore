@@ -1,17 +1,14 @@
-import org.lwjgl.opengl.*;
-import org.lwjgl.system.Configuration;
-
 import java.util.ArrayList;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
-import static org.lwjgl.system.MemoryUtil.*;
- 
+
 public class Main {
 
 
     private long window;
-    private Player my;
+    private Player player;
+    private WorldManager world;
     private Renderer renderer;
     public ArrayList<Chunk> chunks = new ArrayList<Chunk>();
 
@@ -29,7 +26,9 @@ public class Main {
 
     private void init() {
         renderer = new Renderer();
-        my = new Player(renderer.getWindowID());
+        player = new Player(renderer.getWindowID());
+        world = new WorldManager();
+        world.generateWorld();
 
 
 
@@ -39,7 +38,7 @@ public class Main {
         for (int cx = -Constants.RENDER_DISTANCE; cx <= Constants.RENDER_DISTANCE; cx++) {
             for (int cz = -Constants.RENDER_DISTANCE; cz <= Constants.RENDER_DISTANCE; cz++) {
                 Chunk chunk = new Chunk(cx * Constants.CHUNK_SIZE, cz * Constants.CHUNK_SIZE);
-                chunk.create_world();
+                chunk.create_world(world.getChunkData(cx,cz));
                 chunks.add(chunk);
                 cur ++;
                 System.out.println(cur/tot*100 + "% : Done");
@@ -57,7 +56,7 @@ public class Main {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glLoadIdentity();
 
-            my.handleInputs();
+            player.handleInputs();
             renderer.loop(chunks);
 
 

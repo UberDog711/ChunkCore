@@ -160,55 +160,57 @@ public class Chunk {
         return (packed >> 14) & 0x7F;
     }
 // CREATES CHUNK
-    public void create_world(int[][] blocks) {
+    public void create_world(byte[][][] blocks) {
+        byte val;
 
-        int by;
 
         for (int bx = 0; bx < chunk_size; bx ++) {
             for (int bz = 0; bz < chunk_size; bz ++) {
+                for (int by = 0; by < chunk_size; by++) {
+                    val = blocks[bx][by][bz];
+                    if (val == 0) continue;
 
-                by = blocks[bx][bz];
-                for (int face = 0; face < 6; face++) {
-                    if (face == 1) continue;  // Optional: skip bottom faces
+                    for (int face = 0; face < 6; face++) {
+                        if (face == 1) continue;  // Optional: skip bottom faces
 
-                    Vector3i offset = offsets.get(face);
-                    int ox = offset.x, oy = offset.y, oz = offset.z;
+                        Vector3i offset = offsets.get(face);
+                        int ox = offset.x, oy = offset.y, oz = offset.z;
 
-                    // Get neighbor position
-                    int nx = bx + ox;
-                    int ny = by + oy;
-                    int nz = bz + oz;
+                        // Get neighbor position
+                        int nx = bx + ox;
+                        int ny = by + oy;
+                        int nz = bz + oz;
 
-                    // Check boundaries before checking grass_grass_blocks list
-                    if (nx >= 0 && nx < chunk_size &&
-                            ny >= 0 && ny < chunk_size &&
-                            nz >= 0 && nz < chunk_size) {
-                        // Neighbor is inside the chunk
+                        // Check boundaries before checking grass_grass_blocks list
+                        if (nx >= 0 && nx < chunk_size &&
+                                ny >= 0 && ny < chunk_size &&
+                                nz >= 0 && nz < chunk_size) {
+                            // Neighbor is inside the chunk
 
-                        blocks[bx][bz]
-                        if (blocks.containsKey(packPos(nx, ny, nz))) {
-                            continue; // Skip face if neighbor is filled
+                            if (blocks[nx][ny][nz] == 1) {
+                                continue;
+                            }
+
                         }
-                    }
 
-                    // If we reach here, we draw the face — either empty neighbor OR outside chunk
-
+                        // If we reach here, we draw the face — either empty neighbor OR outside chunk
 
 
-                    Vector3[] face_vertices = FACE_DEFS.get(face);
-                    for (Vector3 v : face_vertices) {
-                        vertex_data.add(new Vector3(
-                                v.x + bx + this.x,
-                                v.y + by,
-                                v.z + bz + this.z
-                        ));
-                    }
+                        Vector3[] face_vertices = FACE_DEFS.get(face);
+                        for (Vector3 v : face_vertices) {
+                            vertex_data.add(new Vector3(
+                                    v.x + bx + this.x,
+                                    v.y + by,
+                                    v.z + bz + this.z
+                            ));
+                        }
 
 
-                    ArrayList<Double> colorList = face_color(face,0);
-                    Vector3 colorVector = new Vector3(colorList.get(0), colorList.get(1), colorList.get(2));
-                    for (int c = 0; c < 4; c++) {
-                        color_data.add(colorVector);
+                        ArrayList<Double> colorList = face_color(face, 0);
+                        Vector3 colorVector = new Vector3(colorList.get(0), colorList.get(1), colorList.get(2));
+                        for (int c = 0; c < 4; c++) {
+                            color_data.add(colorVector);
+                        }
                     }
                 }
             }

@@ -1,7 +1,9 @@
 import java.util.Random;
 
 
-public class WolrdGenerator {
+public class WorldManager {
+
+
     float scale = 150f;
     int seed = 0; // base in python pnoise2 base=0
     int octaves = 2;
@@ -15,17 +17,44 @@ public class WolrdGenerator {
     int chunkSize = Constants.CHUNK_SIZE;
     int renderDistance = Constants.RENDER_DISTANCE;
 
-    public int[][] generateWorld() {
-        int[][] topSurface = new int [chunkSize * renderDistance][chunkSize * renderDistance];
+    private byte[][][] blocks = new byte[chunkSize * renderDistance][chunkSize][chunkSize*renderDistance];
 
-        for (int posX = -chunkSize*(renderDistance / 2); posX < chunkSize * renderDistance; posX++) {
-            for (int posZ = -chunkSize*(renderDistance / 2); posZ < chunkSize * renderDistance; posZ++) {
+
+    public byte[][][] getChunkData(int chunkX, int chunkZ) {
+        byte[][][] out = new byte[chunkSize][chunkSize][chunkSize];
+
+        for (int x = 0; x < chunkSize; x++) {
+            for (int y = 0; y < chunkSize; y++) {
+                for (int z = 0; z < chunkSize; z++) {
+                    int relX = x + (chunkSize * chunkX);
+                    int relY = y;
+                    int relZ = z + (chunkSize * chunkZ);
+                    out[x][y][z] = blocks[solvePos(relX)][relY][solvePos(relZ)];
+                }
+            }
+        }
+
+        return out;
+    }
+
+    public byte getBlock(int x, int y, int z) {
+        return blocks[x][y][z];
+    }
+
+    private int solvePos(int pos) {
+        return pos + ((renderDistance * chunkSize) / 2);
+    }
+
+    public void generateWorld() {
+
+        for (int posX = -chunkSize*(renderDistance / 2); posX < (chunkSize * renderDistance)/2; posX++) {
+            for (int posZ = -chunkSize*(renderDistance / 2); posZ < (chunkSize * renderDistance)/2; posZ++) {
 
 
                 float baseNoise = 0;
 
 
-                // You can generate offsets per octave to mimic Python's base param better if you want:
+
                 Random rand = new Random(seed);
                 float[] octaveOffsetsX = new float[octaves];
                 float[] octaveOffsetsY = new float[octaves];
@@ -57,9 +86,8 @@ public class WolrdGenerator {
 
 
                 if (height < 0) continue;
-                topSurface[posX][posZ] = height;
+                blocks[solvePos(posX)][height][solvePos(posZ)] = 1;
             }
         }
-        return topSurface;
     }
 }
