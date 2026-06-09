@@ -17,8 +17,8 @@ public class WorldManager {
     int chunkSize = Constants.CHUNK_SIZE;
     int renderDistance = Constants.RENDER_DISTANCE;
 
-    private byte[][][] blocks = new byte[chunkSize * renderDistance][chunkSize][chunkSize*renderDistance];
-2
+    private byte[][][] blocks = new byte[2 * chunkSize * renderDistance][chunkSize][2 * chunkSize*renderDistance];
+
 
     public byte[][][] getChunkData(int chunkX, int chunkZ) {
         byte[][][] out = new byte[chunkSize][chunkSize][chunkSize];
@@ -29,7 +29,7 @@ public class WorldManager {
                     int relX = x + (chunkSize * chunkX);
                     int relY = y;
                     int relZ = z + (chunkSize * chunkZ);
-                    out[x][y][z] = blocks[solvePos(relX,blocks.length)][relY][solvePos(relZ,blocks.length)];
+                    out[x][y][z] = blocks[solvePos(relX,-1)][relY][solvePos(relZ,-2)];
                 }
             }
         }
@@ -50,14 +50,14 @@ public class WorldManager {
     }
 
     public void generateWorld() {
-
+        int posX;
+        int posZ;
         // 1
         // 2
-
-        for (int posX = -chunkSize * renderDistance; posX < chunkSize * renderDistance; posX++) {
-            for (int posZ = -chunkSize * renderDistance; posZ < chunkSize * renderDistance; posZ++) {
-
-
+        for (int x = 0; x < (renderDistance * 2)*(chunkSize); x++) {
+            for (int z = 0; z < (renderDistance * 2)*(chunkSize); z++) {
+                posX = x - (renderDistance * chunkSize);
+                posZ = z - (renderDistance * chunkSize);
                 float baseNoise = 0;
 
 
@@ -89,8 +89,9 @@ public class WorldManager {
 
                 // Clamp height if necessary
                 height = Math.clamp(height,0,127);
-
+                System.out.println(x + "-" + z);
                 blocks[solvePos(posX,blocks.length)][height][solvePos(posZ,blocks.length)] = 1;
+
             }
         }
     }
