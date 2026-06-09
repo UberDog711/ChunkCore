@@ -61,7 +61,6 @@ public class Main {
 
 
 
-
             // FPS Counter logic
             frames++;
             double currentTime = glfwGetTime();

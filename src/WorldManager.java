@@ -18,7 +18,7 @@ public class WorldManager {
     int renderDistance = Constants.RENDER_DISTANCE;
 
     private byte[][][] blocks = new byte[chunkSize * renderDistance][chunkSize][chunkSize*renderDistance];
-
+2
 
     public byte[][][] getChunkData(int chunkX, int chunkZ) {
         byte[][][] out = new byte[chunkSize][chunkSize][chunkSize];
@@ -29,7 +29,7 @@ public class WorldManager {
                     int relX = x + (chunkSize * chunkX);
                     int relY = y;
                     int relZ = z + (chunkSize * chunkZ);
-                    out[x][y][z] = blocks[solvePos(relX)][relY][solvePos(relZ)];
+                    out[x][y][z] = blocks[solvePos(relX,blocks.length)][relY][solvePos(relZ,blocks.length)];
                 }
             }
         }
@@ -41,14 +41,21 @@ public class WorldManager {
         return blocks[x][y][z];
     }
 
-    private int solvePos(int pos) {
-        return pos + ((renderDistance * chunkSize) / 2);
+    private int solvePos(int pos, int maxLen) {
+        int out = pos + ((renderDistance * chunkSize));
+        if (out < 0 || out >= maxLen ) {
+            System.out.println("Input: " + pos + " Output: " + out + " Max: " + maxLen);
+        }
+        return out;
     }
 
     public void generateWorld() {
 
-        for (int posX = -chunkSize*(renderDistance / 2); posX < (chunkSize * renderDistance)/2; posX++) {
-            for (int posZ = -chunkSize*(renderDistance / 2); posZ < (chunkSize * renderDistance)/2; posZ++) {
+        // 1
+        // 2
+
+        for (int posX = -chunkSize * renderDistance; posX < chunkSize * renderDistance; posX++) {
+            for (int posZ = -chunkSize * renderDistance; posZ < chunkSize * renderDistance; posZ++) {
 
 
                 float baseNoise = 0;
@@ -81,12 +88,9 @@ public class WorldManager {
                 int height = (int) (val * val * 32f);
 
                 // Clamp height if necessary
-                if (height < 0) height = 0;
-                if (height > 127) height = 127;
+                height = Math.clamp(height,0,127);
 
-
-                if (height < 0) continue;
-                blocks[solvePos(posX)][height][solvePos(posZ)] = 1;
+                blocks[solvePos(posX,blocks.length)][height][solvePos(posZ,blocks.length)] = 1;
             }
         }
     }
