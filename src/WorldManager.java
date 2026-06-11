@@ -87,11 +87,11 @@ public class WorldManager {
                 float val = 1f + baseNoise;
 
 
-                int height = (int) (val * val * 32f);
+                int height = (int) (val * val * 127f);
 
                 // Clamp height if necessary
-                height = (int) (Math.random() * 127);
-                height = Math.clamp(height,0,127);
+                // height = (int) (Math.random() * 127);
+                height = Math.clamp(height,0,chunkSize-1);
                 //System.out.println(x + "-" + z);
                 blocks[solvePos(posX,"X of World")][height][solvePos(posZ,"Z of World")] = 1;
 

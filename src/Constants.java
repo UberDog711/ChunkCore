@@ -5,11 +5,11 @@ public class Constants {
     public final static double FOV = 110;
 
     public final static int CHUNK_SIZE = 128;
-    public final static int RENDER_DISTANCE = 16;
+    public final static int RENDER_DISTANCE = 4;
 
-    public final static float MAX_MOVEMENT_SPEED = 64f;
-    public final static float ACCELERATION_SPEED = 64f;
-    public final static float DECELERATION_SPEED = 0.5f;
+    public final static float MAX_MOVEMENT_SPEED = 16f;
+    public final static float ACCELERATION_SPEED = 4f;
+    public final static float DECELERATION_SPEED = 0.75f;
 
     public final static float R_SKY_COLOR = (float) 153 / 255;
     public final static float G_SKY_COLOR = (float) 153 / 255;

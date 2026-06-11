@@ -34,7 +34,7 @@ public class Renderer {
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_CULL_FACE);
 
-        glCullFace(GL_BACK);
+        glCullFace(GL_FRONT);
         glClearColor(Constants.R_SKY_COLOR, Constants.G_SKY_COLOR, Constants.B_SKY_COLOR, 1.0f); // sky color
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();

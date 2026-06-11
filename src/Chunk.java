@@ -17,87 +17,43 @@ public class Chunk {
 
 
     private int chunk_size = Constants.CHUNK_SIZE;
-    private int[][] offsets = new int[6][3];
+    private int[][] offsets;
     // Origin - All except Y
 
-    // 1 2 3 4 Top
-    // 5 6 7 8 Bottom
-    // Starting at - Clockwise
-    private int[][] vertices = new int[8][3];
+    private int[][][] verticesOffsets = new int[6][4][3];
 
 
 
 
 
-    private Map<Integer, Vector3[]> FACE_DEFS = createFaceDefs();
 
     public Chunk(int x, int z) {
         this.x = x;
         this.z = z;
 
-        offsets[0][0] = 0; offsets[0][1] = 1; offsets[0][2] = 0; // above
-        offsets[1][0] = 0; offsets[1][1] = -1; offsets[1][2] = 0; // bellow
-        offsets[3][0] = 1; offsets[3][1] = 0; offsets[3][2] = 0; // right
-        offsets[2][0] = -1; offsets[2][1] = 0; offsets[2][2] = 0; // left
-        offsets[4][0] = 0; offsets[4][1] = 0; offsets[4][2] = 1; // backwards
-        offsets[5][0] = 0; offsets[5][1] = 0; offsets[5][2] = -1; // forwards
+        offsets = new int[][] {
+                {0,1,0},
+                {0,-1,0},
+                {-1,0,0},
+                {1,0,0},
+                {0,0,1},
+                {0,0,-1},
+        };
 
-        vertices[0][0] = 0; vertices[0][0] = 0; vertices[0][0] = 0;
-
-    }
-// METHOD CREATES LIST
-    private Map<Integer, Vector3[]> createFaceDefs() {
-        Map<Integer, Vector3[]> map = new HashMap<>();
-
-        // Top face (+Y), looking from above
-        map.put(0, new Vector3[]{
-            new Vector3(0, 1, 1),
-            new Vector3(1, 1, 1),
-            new Vector3(1, 1, 0),
-            new Vector3(0, 1, 0)
-        });
-
-        // Bottom face (-Y), looking from below
-        map.put(1, new Vector3[]{
-            new Vector3(0, 0, 0),
-            new Vector3(1, 0, 0),
-            new Vector3(1, 0, 1),
-            new Vector3(0, 0, 1)
-        });
-
-        // Left face (-X), looking from left
-        map.put(2, new Vector3[]{
-            new Vector3(0, 0, 1),
-            new Vector3(0, 1, 1),
-            new Vector3(0, 1, 0),
-            new Vector3(0, 0, 0)
-        });
-
-        // Right face (+X), looking from right
-        map.put(3, new Vector3[]{
-            new Vector3(1, 0, 0),
-            new Vector3(1, 1, 0),
-            new Vector3(1, 1, 1),
-            new Vector3(1, 0, 1)
-        });
-
-        // Front face (+Z), looking from front
-        map.put(4, new Vector3[]{
-            new Vector3(0, 0, 1),
-            new Vector3(1, 0, 1),
-            new Vector3(1, 1, 1),
-            new Vector3(0, 1, 1)
-        });
-
-        // Back face (-Z), looking from back
-        map.put(5, new Vector3[]{
-            new Vector3(0, 0, 0),
-            new Vector3(0, 1, 0),
-            new Vector3(1, 1, 0),
-            new Vector3(1, 0, 0)
-        });
-
-        return map;
+        verticesOffsets = new int[][][]{
+                // Top
+                {{0,0,0}, {1,0,0}, {1,0,1}, {0,0,1}},
+                // Bottom
+                {{0,-1,0}, {0,-1,1}, {1,-1,1}, {1,-1,0}},
+                // Left
+                {{0,0,0}, {0,0,1}, {0,-1,1}, {0,-1,0}},
+                // Right
+                {{1,0,0}, {1,-1,0}, {1,-1,1}, {1,0,1}},
+                // Front
+                {{0,0,1}, {1,0,1}, {1,-1,1}, {0,-1,1}},
+                // Back
+                {{0,0,0}, {0,-1,0}, {1,-1,0}, {1,0,0}}
+        };
     }
 // CREATES FACE COLORS
     private ArrayList<Double> face_color(int face_num,int block_type) {
@@ -209,15 +165,14 @@ public class Chunk {
                         // If we reach here, we draw the face — either empty neighbor OR outside chunk
 
 
-                        Vector3[] face_vertices = FACE_DEFS.get(face);
-                        for (Vector3 v : face_vertices) {
+                        int[][] faceVertices = verticesOffsets[face];
+                        for (int[] cords : faceVertices) {
                             vertex_data.add(new Vector3(
-                                    v.x + bx + this.x,
-                                    v.y + by,
-                                    v.z + bz + this.z
+                                    cords[0] + bx + this.x,
+                                    cords[1] + by,
+                                    cords[2] + bz + this.z
                             ));
                         }
-
 
                         ArrayList<Double> colorList = face_color(face, 0);
                         Vector3 colorVector = new Vector3(colorList.get(0), colorList.get(1), colorList.get(2));

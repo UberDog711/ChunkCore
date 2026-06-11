@@ -26,7 +26,8 @@ public class Main {
 
     private void init() {
         renderer = new Renderer();
-        player = new Player(renderer.getWindowID());
+        window = renderer.getWindowID();
+        player = new Player(window);
         world = new WorldManager();
         world.generateWorld();
 
@@ -51,8 +52,7 @@ public class Main {
     private void loop() {
         double lastTime = glfwGetTime();
         int frames = 0;
-        //!glfwWindowShouldClose(window)
-        while (true) {
+        while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glLoadIdentity();
 
@@ -68,8 +68,6 @@ public class Main {
                 System.out.println("FPS: " + frames);
                 frames = 0;
                 lastTime = currentTime;
-                //System.out.println("Position: X=" + (camera.cameraPos[0]) + " Y=" + (camera.cameraPos[1]) + " Z=" + (camera.cameraPos[2]));
-                //System.out.println("Rotation X=" + (camera.cameraRotation[0]) + " Y=" + (camera.cameraRotation[1]));
             }
         }
     }
