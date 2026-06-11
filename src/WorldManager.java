@@ -17,19 +17,21 @@ public class WorldManager {
     int chunkSize = Constants.CHUNK_SIZE;
     int renderDistance = Constants.RENDER_DISTANCE;
 
-    private byte[][][] blocks = new byte[2 * chunkSize * renderDistance][chunkSize][2 * chunkSize*renderDistance];
+    private final int lenXZ = 2 * chunkSize * renderDistance;
+    private int halfLenXZ = lenXZ / 2;
+    private byte[][][] blocks = new byte[lenXZ][chunkSize][lenXZ];
 
 
     public byte[][][] getChunkData(int chunkX, int chunkZ) {
         byte[][][] out = new byte[chunkSize][chunkSize][chunkSize];
 
         for (int x = 0; x < chunkSize; x++) {
-            for (int y = 0; y < chunkSize; y++) {
-                for (int z = 0; z < chunkSize; z++) {
-                    int relX = x + (chunkSize * chunkX);
+            for (int z = 0; z < chunkSize; z++) {
+                for (int y = 0; y < chunkSize; y++) {
+                    int relX = solvePos(Math.clamp(x + (chunkSize * (chunkX)),-halfLenXZ,halfLenXZ-1),"X of Chunk");
                     int relY = y;
-                    int relZ = z + (chunkSize * chunkZ);
-                    out[x][y][z] = blocks[solvePos(relX,-1)][relY][solvePos(relZ,-2)];
+                    int relZ = solvePos(Math.clamp(z + (chunkSize * (chunkZ)),-halfLenXZ,halfLenXZ-1),"Z of Chunk");
+                    out[x][y][z] = blocks[relX][relY][relZ];
                 }
             }
         }
@@ -41,11 +43,11 @@ public class WorldManager {
         return blocks[x][y][z];
     }
 
-    private int solvePos(int pos, int maxLen) {
+    private int solvePos(int pos, String reference) {
         int out = pos + ((renderDistance * chunkSize));
-        if (out < 0 || out >= maxLen ) {
-            System.out.println("Input: " + pos + " Output: " + out + " Max: " + maxLen);
-        }
+
+        //System.out.println("Input: " + pos + " Output: " + out + " Type: " + reference);
+
         return out;
     }
 
@@ -88,9 +90,10 @@ public class WorldManager {
                 int height = (int) (val * val * 32f);
 
                 // Clamp height if necessary
+                height = (int) (Math.random() * 127);
                 height = Math.clamp(height,0,127);
-                System.out.println(x + "-" + z);
-                blocks[solvePos(posX,blocks.length)][height][solvePos(posZ,blocks.length)] = 1;
+                //System.out.println(x + "-" + z);
+                blocks[solvePos(posX,"X of World")][height][solvePos(posZ,"Z of World")] = 1;
 
             }
         }

@@ -18,8 +18,8 @@ public class Chunk {
     private ArrayList<Vector3> vertex_data = new ArrayList<>();
     private ArrayList<Vector3> color_data = new ArrayList<>();
     private int vbo_id, cbo_id, vertex_count;
-    //private Set<Integer> grass_blocks = new HashSet<>();
-    private Map<Integer, Byte> blocks = new HashMap<>();
+
+
 
     private int chunk_size = Constants.CHUNK_SIZE;
 
