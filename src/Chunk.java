@@ -8,11 +8,7 @@ import static org.lwjgl.opengl.GL15.*;
 import org.lwjgl.BufferUtils;
 
 public class Chunk {
-    public Chunk(int x, int z) {
-        this.x = x;
-        this.z = z;
-        
-    }
+
 // VARIABLES
     private int x, z;
     private ArrayList<Vector3> vertex_data = new ArrayList<>();
@@ -20,17 +16,35 @@ public class Chunk {
     private int vbo_id, cbo_id, vertex_count;
 
 
-
     private int chunk_size = Constants.CHUNK_SIZE;
+    private int[][] offsets = new int[6][3];
+    // Origin - All except Y
 
-    private ArrayList<Vector3i> offsets = new ArrayList<>(Arrays.asList(
-        new Vector3i(0, 1, 0), new Vector3i(0, -1, 0),
-        new Vector3i(-1, 0, 0), new Vector3i(1, 0, 0),
-        new Vector3i(0, 0, 1), new Vector3i(0, 0, -1)
-    ));
+    // 1 2 3 4 Top
+    // 5 6 7 8 Bottom
+    // Starting at - Clockwise
+    private int[][] vertices = new int[8][3];
+
+
+
+
+
     private Map<Integer, Vector3[]> FACE_DEFS = createFaceDefs();
 
+    public Chunk(int x, int z) {
+        this.x = x;
+        this.z = z;
 
+        offsets[0][0] = 0; offsets[0][1] = 1; offsets[0][2] = 0; // above
+        offsets[1][0] = 0; offsets[1][1] = -1; offsets[1][2] = 0; // bellow
+        offsets[3][0] = 1; offsets[3][1] = 0; offsets[3][2] = 0; // right
+        offsets[2][0] = -1; offsets[2][1] = 0; offsets[2][2] = 0; // left
+        offsets[4][0] = 0; offsets[4][1] = 0; offsets[4][2] = 1; // backwards
+        offsets[5][0] = 0; offsets[5][1] = 0; offsets[5][2] = -1; // forwards
+
+        vertices[0][0] = 0; vertices[0][0] = 0; vertices[0][0] = 0;
+
+    }
 // METHOD CREATES LIST
     private Map<Integer, Vector3[]> createFaceDefs() {
         Map<Integer, Vector3[]> map = new HashMap<>();
@@ -171,26 +185,25 @@ public class Chunk {
                     if (val == 0) continue;
 
                     for (int face = 0; face < 6; face++) {
-                        if (face == 1) continue;  // Optional: skip bottom faces
 
-                        Vector3i offset = offsets.get(face);
-                        int ox = offset.x, oy = offset.y, oz = offset.z;
 
-                        // Get neighbor position
+                        int ox = offsets[face][0];
+                        int oy = offsets[face][1];
+                        int oz = offsets[face][2];
+
+
+
                         int nx = bx + ox;
                         int ny = by + oy;
                         int nz = bz + oz;
 
-                        // Check boundaries before checking grass_grass_blocks list
+
                         if (nx >= 0 && nx < chunk_size &&
-                                ny >= 0 && ny < chunk_size &&
-                                nz >= 0 && nz < chunk_size) {
-                            // Neighbor is inside the chunk
-
-                            if (blocks[nx][ny][nz] == 1) {
-                                continue;
+                            ny >= 0 && ny < chunk_size &&
+                            nz >= 0 && nz < chunk_size) {
+                                if (blocks[nx][ny][nz] == 1) {
+                                    continue;
                             }
-
                         }
 
                         // If we reach here, we draw the face — either empty neighbor OR outside chunk
