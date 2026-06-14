@@ -46,7 +46,7 @@ public class Main {
             }
         }
         double end_start_time = glfwGetTime();
-        System.out.println(end_start_time);
+        System.out.println(end_start_time + " : Elapsed to Load");
     }
 
     private void loop() {
@@ -66,6 +66,12 @@ public class Main {
             double currentTime = glfwGetTime();
             if (currentTime - lastTime >= 1.0) {
                 System.out.println("FPS: " + frames);
+                System.out.println(1 / player.getDeltaTime());
+                System.out.println("Player Vel - X : " + player.getPlayerVelocity()[0]
+                        + " Y : " + player.getPlayerVelocity()[1]
+                        + " Z : " + player.getPlayerVelocity()[2]
+                        + " Moving : " + player.getMoving()
+                );
                 frames = 0;
                 lastTime = currentTime;
             }

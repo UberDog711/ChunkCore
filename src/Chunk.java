@@ -20,7 +20,7 @@ public class Chunk {
     private int[][] offsets;
     // Origin - All except Y
 
-    private int[][][] verticesOffsets = new int[6][4][3];
+    private int[][][] verticesOffsets;
 
 
 

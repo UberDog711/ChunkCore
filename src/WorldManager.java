@@ -28,9 +28,9 @@ public class WorldManager {
         for (int x = 0; x < chunkSize; x++) {
             for (int z = 0; z < chunkSize; z++) {
                 for (int y = 0; y < chunkSize; y++) {
-                    int relX = solvePos(Math.clamp(x + (chunkSize * (chunkX)),-halfLenXZ,halfLenXZ-1),"X of Chunk");
+                    int relX = solvePos(Math.clamp(x + (chunkSize * (chunkX)), -halfLenXZ, halfLenXZ - 1));
                     int relY = y;
-                    int relZ = solvePos(Math.clamp(z + (chunkSize * (chunkZ)),-halfLenXZ,halfLenXZ-1),"Z of Chunk");
+                    int relZ = solvePos(Math.clamp(z + (chunkSize * (chunkZ)), -halfLenXZ, halfLenXZ - 1));
                     out[x][y][z] = blocks[relX][relY][relZ];
                 }
             }
@@ -43,10 +43,8 @@ public class WorldManager {
         return blocks[x][y][z];
     }
 
-    private int solvePos(int pos, String reference) {
+    private int solvePos(int pos) {
         int out = pos + ((renderDistance * chunkSize));
-
-        //System.out.println("Input: " + pos + " Output: " + out + " Type: " + reference);
 
         return out;
     }
@@ -56,12 +54,11 @@ public class WorldManager {
         int posZ;
         // 1
         // 2
-        for (int x = 0; x < (renderDistance * 2)*(chunkSize); x++) {
-            for (int z = 0; z < (renderDistance * 2)*(chunkSize); z++) {
+        for (int x = 0; x < (renderDistance * 2) * (chunkSize); x++) {
+            for (int z = 0; z < (renderDistance * 2) * (chunkSize); z++) {
                 posX = x - (renderDistance * chunkSize);
                 posZ = z - (renderDistance * chunkSize);
                 float baseNoise = 0;
-
 
 
                 Random rand = new Random(seed);
@@ -90,11 +87,27 @@ public class WorldManager {
                 int height = (int) (val * val * 127f);
 
                 // Clamp height if necessary
-                // height = (int) (Math.random() * 127);
-                height = Math.clamp(height,0,chunkSize-1);
+                 height = (int) (Math.random() * 127);
+                //height = Math.clamp(height, 0, chunkSize - 1);
                 //System.out.println(x + "-" + z);
-                blocks[solvePos(posX,"X of World")][height][solvePos(posZ,"Z of World")] = 1;
+                blocks[solvePos(posX)][height][solvePos(posZ)] = 1;
 
+            }
+        }
+    }
+
+    public void generateMaxChunk() {
+        int posX;
+        int posZ;
+        // 1
+        // 2
+        for (int x = 0; x < (renderDistance * 2) * (chunkSize); x++) {
+            for (int z = 0; z < (renderDistance * 2) * (chunkSize); z++) {
+                posX = x - (renderDistance * chunkSize);
+                posZ = z - (renderDistance * chunkSize);
+                for (int y = 0; y < chunkSize; y++) {
+                    blocks[solvePos(posX)][y][solvePos(posZ)] = 1;
+                }
             }
         }
     }
