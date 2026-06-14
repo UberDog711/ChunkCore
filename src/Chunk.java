@@ -12,7 +12,7 @@ public class Chunk {
 // VARIABLES
     private int x, z;
     private ArrayList<Vector3> vertex_data = new ArrayList<>();
-    private ArrayList<Vector3> color_data = new ArrayList<>();
+    private final ArrayList<float[]> color_data = new ArrayList<>();
     private int vbo_id, cbo_id, vertex_count;
 
 
@@ -56,39 +56,39 @@ public class Chunk {
         };
     }
 // CREATES FACE COLORS
-    private ArrayList<Double> face_color(int face_num,int block_type) {
-        ArrayList<Double> base_color = new ArrayList<>();
-        double BASE_R;
-        double BASE_G;
-        double BASE_B;
-        if (block_type == 0) { // Grass
-            BASE_R = 35f/255;
-            BASE_G = 74f/255f;
-            BASE_B = 57f/255f;
+    private float[] face_color(int face_num, int block_type) {
+        float[] out = new float[3];
+        float baseR;
+        float baseG;
+        float baseB;
+        if (block_type == 1) { // Grass
+            baseR = 35f/255;
+            baseG = 74f/255f;
+            baseB = 57f/255f;
         } else { // Example
-            BASE_R = 30f/255;
-            BASE_G = 70f/255f;
-            BASE_B = 40f/255f;
+            baseR = 30f/255;
+            baseG = 70f/255f;
+            baseB = 40f/255f;
         }
 
         // Brightness multipliers per face
-        double multiplier;
+        float multiplier;
         if (face_num == 0) {
-            multiplier = 1.2;
+            multiplier = 1.2f;
         } else if (face_num == 1) {
-            multiplier = 0.6;
+            multiplier = 0.6f;
         } else if (face_num == 2 || face_num == 3) {
-            multiplier = 0.8;
+            multiplier = 0.8f;
         } else {
-            multiplier = 1.0;
+            multiplier = 1.0f;
         }
 
         // Apply brightness to base color
-        base_color.add(BASE_R * multiplier);
-        base_color.add(BASE_G * multiplier);
-        base_color.add(BASE_B * multiplier);
+        out[0] = (baseR * multiplier);
+        out[1] = (baseG * multiplier);
+        out[2] = (baseB * multiplier);
 
-        return base_color;
+        return out;
     }
 // FLATTENS VERTEX DATA
     private float[] flattenVertexData(ArrayList<Vector3> data) {
@@ -102,15 +102,14 @@ public class Chunk {
         return flat;
     }
 // FLATTENS COLOR DATA
-    private float[] flattenColorData(ArrayList<Vector3> data) {
-        float[] flat = new float[data.size() * 3];
+    private float[] flattenColorData(ArrayList<float[]> data) {
+        float[] out = new float[data.size() * 3];
         for (int i = 0; i < data.size(); i++) {
-            Vector3 v = data.get(i);
-            flat[i * 3] = (float) v.x;
-            flat[i * 3 + 1] = (float) v.y;
-            flat[i * 3 + 2] = (float) v.z;
+            out[i * 3] = data.get(i)[0];
+            out[i * 3 + 1] = data.get(i)[1];
+            out[i * 3 + 2] = data.get(i)[2];
         }
-        return flat;
+        return out;
     }
 //FLATTENS BLOCK DATA
     public int packPos(int x, int y, int z) {
@@ -174,10 +173,10 @@ public class Chunk {
                             ));
                         }
 
-                        ArrayList<Double> colorList = face_color(face, 0);
-                        Vector3 colorVector = new Vector3(colorList.get(0), colorList.get(1), colorList.get(2));
+                        float[] colorArray = face_color(face, val);
+
                         for (int c = 0; c < 4; c++) {
-                            color_data.add(colorVector);
+                            color_data.add(colorArray);
                         }
                     }
                 }

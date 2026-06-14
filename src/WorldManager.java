@@ -1,5 +1,7 @@
 import java.util.Random;
 
+import static org.lwjgl.glfw.GLFW.glfwGetTime;
+
 
 public class WorldManager {
 
@@ -17,12 +19,14 @@ public class WorldManager {
     int chunkSize = Constants.CHUNK_SIZE;
     int renderDistance = Constants.RENDER_DISTANCE;
 
+
+
     private final int lenXZ = 2 * chunkSize * renderDistance;
-    private int halfLenXZ = lenXZ / 2;
-    private byte[][][] blocks = new byte[lenXZ][chunkSize][lenXZ];
+    private final int halfLenXZ = lenXZ / 2;
+    private final byte[][][] blocks = new byte[lenXZ][chunkSize][lenXZ];
 
 
-    public byte[][][] getChunkData(int chunkX, int chunkZ) {
+    public byte[][][] getChunkBlockData(int chunkX, int chunkZ) {
         byte[][][] out = new byte[chunkSize][chunkSize][chunkSize];
 
         for (int x = 0; x < chunkSize; x++) {
@@ -111,4 +115,8 @@ public class WorldManager {
             }
         }
     }
+
+
+
+
 }

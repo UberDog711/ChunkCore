@@ -18,13 +18,14 @@ public class Player {
     private double currentTime;
     private double lastFrameTime;
     private double deltaSpeed;
-    private boolean moving;
+    private boolean movingKeyActivated;
+
 
     public double[] getPlayerPos () {return playerPos;}
     public double[] getPlayerRot () {return playerRot;}
     public double[] getPlayerVelocity () {return playerVel_Per_Second;}
     public double getDeltaTime () {return deltaTime;}
-    public boolean getMoving () {return moving;}
+    public boolean getMovingKeyActivated() {return movingKeyActivated;}
 
     public Player (long window) {
         this.window = window;
@@ -37,30 +38,30 @@ public class Player {
         deltaSpeed = (deltaTime * Constants.ACCELERATION_SPEED);
         yawRad = Math.toRadians(playerRot[0]);
         pitchRad = Math.toRadians(playerRot[1]);
-        moving = false;
+        movingKeyActivated = false;
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
             moveForward();
-            moving = true;
+            movingKeyActivated = true;
         }
         if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
             moveBack();
-            moving = true;
+            movingKeyActivated = true;
         }
         if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
             moveLeft();
-            moving = true;
+            movingKeyActivated = true;
         }
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
             moveRight();
-            moving = true;
+            movingKeyActivated = true;
         }
 
         handleMouse(window);
 
         for (int i = 0; i < 3; i++) {
             playerVel_Per_Second[i] = Math.clamp(playerVel_Per_Second[i],-Constants.MAX_MOVEMENT_SPEED,Constants.MAX_MOVEMENT_SPEED);
-            if (!moving) {
+            if (!movingKeyActivated) {
                 playerVel_Per_Second[i] *= (1-(Constants.DECELERATION_SPEED * deltaTime));
                 if (Math.abs(playerVel_Per_Second[i]) < 0.25) playerVel_Per_Second[i] = 0;
             }
@@ -74,16 +75,16 @@ public class Player {
     }
 
     private void handleMouse (long window) {
-        double[] xpos = new double[1];
-        double[] ypos = new double[1];
+        double[] posX = new double[1];
+        double[] posY = new double[1];
 
-        glfwGetCursorPos(window, xpos, ypos);
+        glfwGetCursorPos(window, posX, posY);
 
         double centerX = (double) Constants.RESOLUTION_X / 2;
         double centerY = (double) Constants.RESOLUTION_Y / 2;
 
-        double deltaX = xpos[0] - centerX;
-        double deltaY = ypos[0] - centerY;
+        double deltaX = posX[0] - centerX;
+        double deltaY = posY[0] - centerY;
 
         float sensitivity = Constants.SENSITIVITY;
 

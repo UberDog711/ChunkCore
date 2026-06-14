@@ -13,6 +13,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Renderer {
     private long window;
+    private int renderDistance = Constants.RENDER_DISTANCE;
 
     public Renderer() {
         if (!glfwInit()) {
@@ -58,7 +59,8 @@ public class Renderer {
             chunk.render(false);
         }
 
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+            glfwSwapBuffers(window);
+            glfwPollEvents();
     }
 }
+
