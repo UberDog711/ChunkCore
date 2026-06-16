@@ -116,7 +116,9 @@ public class WorldManager {
         }
     }
 
+    public void createWorld() {
 
+    }
 
 
 }

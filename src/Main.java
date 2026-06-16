@@ -8,9 +8,9 @@ public class Main {
     private Player player;
     private WorldManager world;
     private Renderer renderer;
-    int renderDistance = Constants.RENDER_DISTANCE;
-    ArrayList<Chunk> chunks;
-
+    static int renderDistance = Constants.RENDER_DISTANCE;
+    //ArrayList<Chunk> chunks;
+    Chunk[] chunks;
 
     public void main() {
         init();
@@ -29,7 +29,8 @@ public class Main {
         player = new Player(window);
         world = new WorldManager();
         world.generateWorld();
-        chunks = new ArrayList<Chunk>();
+        chunks = new Chunk[Constants.TOTAL_CHUNKS];
+        //chunks = new ArrayList<Chunk>();
 
 
         int tot = (int) (Math.pow(renderDistance,2) * 4);
@@ -38,7 +39,8 @@ public class Main {
             for (int cz = -renderDistance; cz < renderDistance; cz++) {
                 Chunk chunk = new Chunk(cx * Constants.CHUNK_SIZE, cz * Constants.CHUNK_SIZE);
                 chunk.create_world(world.getChunkBlockData(cx,cz));
-                chunks.add(chunk);
+                chunks[getChunk(cx,cz)] = chunk;
+                //chunks.add(chunk);
                 cur ++;
                 System.out.println("Chunk: " + cur + " Out of: " + tot + " Overall: " + (double) cur/tot*100 + "% : Done");
             }
@@ -46,6 +48,13 @@ public class Main {
         double end_start_time = glfwGetTime();
         System.out.println(end_start_time + " : Elapsed to Load");
     }
+
+    public static int getChunk(int x, int z) {
+        int relX = x + renderDistance;
+        int relZ = z + renderDistance;
+        return (relZ * renderDistance * 2) + relX;
+    }
+
 
     private void loop() {
         double lastTime = glfwGetTime();

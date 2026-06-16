@@ -4,8 +4,9 @@ public class Constants {
     public final static float SENSITIVITY = 0.10f;
     public final static double FOV = 110;
 
-    public final static int CHUNK_SIZE = 256;
+    public final static int CHUNK_SIZE = 128;
     public final static int RENDER_DISTANCE = 6;
+    public final static int TOTAL_CHUNKS = (int) (Math.pow(RENDER_DISTANCE,2) * 4);
 
     public final static double MAX_MOVEMENT_SPEED = 256;
     public final static double ACCELERATION_SPEED = 128f;
