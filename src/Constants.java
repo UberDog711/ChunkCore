@@ -22,4 +22,5 @@ public class Constants {
 
     public final static boolean UTIL_VELOCITY_REPORTING = false;
     public final static boolean UTIL_FPS_REPORTING = true;
+    public final static boolean TESTING = true;
 }
