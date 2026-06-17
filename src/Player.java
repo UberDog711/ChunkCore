@@ -7,7 +7,7 @@ import static org.lwjgl.glfw.GLFW.glfwGetKey;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Player {
-    private final double[] playerPos = new double[] {0.0f, 0.0f, 0.0f};
+    private final double[] playerPos = new double[] {0.0f, 10.0f, 0.0f};
     private final double[] playerVel_Per_Second = new double[] {0.0f, 0.0f, 0.0f};
     private final double[] playerRot = new double[] {0.0f, 0.0f};
 
@@ -62,7 +62,7 @@ public class Player {
         lastFrameTime = currentTime;
         deltaSpeed = (deltaTime * Constants.ACCELERATION_SPEED);
         yawRad = Math.toRadians(playerRot[0]);
-        pitchRad = Math.toRadians(playerRot[1]);
+        pitchRad = 0;//Math.toRadians(playerRot[1]);
         movingKeyActivated = false;
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {

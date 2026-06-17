@@ -15,8 +15,10 @@ public class Chunk {
     private final ArrayList<float[]> color_data = new ArrayList<>();
     private int vbo_id, cbo_id, vertex_count;
 
+    int horizontalChunkSize = Constants.HORIZONTAL_CHUNK_SIZE;
+    private int verticalChunkSize = Constants.VERTICAL_CHUNK_SIZE;
 
-    private int chunk_size = Constants.CHUNK_SIZE;
+
     private int[][] offsets;
     // Origin - All except Y
 
@@ -133,9 +135,10 @@ public class Chunk {
         byte val;
 
 
-        for (int bx = 0; bx < chunk_size; bx ++) {
-            for (int bz = 0; bz < chunk_size; bz ++) {
-                for (int by = 0; by < chunk_size; by++) {
+
+        for (int bx = 0; bx < horizontalChunkSize; bx ++) {
+            for (int bz = 0; bz < horizontalChunkSize; bz ++) {
+                for (int by = 0; by < verticalChunkSize; by++) {
                     val = blocks[bx][by][bz];
                     if (val == 0) continue;
 
@@ -153,9 +156,9 @@ public class Chunk {
                         int nz = bz + oz;
 
 
-                        if (nx >= 0 && nx < chunk_size &&
-                            ny >= 0 && ny < chunk_size &&
-                            nz >= 0 && nz < chunk_size) {
+                        if (nx >= 0 && nx < horizontalChunkSize &&
+                            ny >= 0 && ny < verticalChunkSize &&
+                            nz >= 0 && nz < horizontalChunkSize) {
                                 if (blocks[nx][ny][nz] == 1) {
                                     continue;
                             }

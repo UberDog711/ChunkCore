@@ -57,8 +57,11 @@ public class Util {
         totalC /= chunkRegenTimes.size();
         totalF /= fpsRecords.size();
         System.out.println();
+        System.out.println("Total Block Render Distance: " + Constants.RENDER_DISTANCE * Constants.HORIZONTAL_CHUNK_SIZE);
+        System.out.println("Average FPS: " + totalF);
+        System.out.println();
         System.out.println("Average Chunk Regen Time: " + totalC);
         System.out.println("Chunk Regen Time Expressed as FPS: " + 1/totalC);
-        System.out.println("Average FPS: " + totalF);
+
     }
 }
