@@ -8,9 +8,9 @@ public class Main {
     private Player player;
     private WorldManager world;
     private Renderer renderer;
-    static int renderDistance = Constants.RENDER_DISTANCE;
-    //ArrayList<Chunk> chunks;
-    Chunk[] chunks;
+    private Util util;
+
+
 
     public void main() {
         init();
@@ -18,72 +18,38 @@ public class Main {
         loop();
 
         glfwFreeCallbacks(window);
-
         glfwDestroyWindow(window);
         glfwTerminate();
     }
 
     private void init() {
         renderer = new Renderer();
+        util = new Util();
         window = renderer.getWindowID();
-        player = new Player(window);
         world = new WorldManager();
         world.generateWorld();
-        chunks = new Chunk[Constants.TOTAL_CHUNKS];
-        //chunks = new ArrayList<Chunk>();
+        world.createWorld();
+
+        player = new Player(window, util, world);
 
 
-        int tot = (int) (Math.pow(renderDistance,2) * 4);
-        int cur = 0;
-        for (int cx = -renderDistance; cx < renderDistance; cx++) {
-            for (int cz = -renderDistance; cz < renderDistance; cz++) {
-                Chunk chunk = new Chunk(cx * Constants.CHUNK_SIZE, cz * Constants.CHUNK_SIZE);
-                chunk.create_world(world.getChunkBlockData(cx,cz));
-                chunks[getChunk(cx,cz)] = chunk;
-                //chunks.add(chunk);
-                cur ++;
-                System.out.println("Chunk: " + cur + " Out of: " + tot + " Overall: " + (double) cur/tot*100 + "% : Done");
-            }
-        }
-        double end_start_time = glfwGetTime();
-        System.out.println(end_start_time + " : Elapsed to Load");
-    }
 
-    public static int getChunk(int x, int z) {
-        int relX = x + renderDistance;
-        int relZ = z + renderDistance;
-        return (relZ * renderDistance * 2) + relX;
     }
 
 
     private void loop() {
-        double lastTime = glfwGetTime();
-        int frames = 0;
         while (!glfwWindowShouldClose(window)) {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
             glLoadIdentity();
 
 
             player.handleInputs();
-            renderer.loop(chunks);
+            renderer.loop(world.getChunks());
 
 
 
-            frames++;
-            double currentTime = glfwGetTime();
-            if (currentTime - lastTime >= 1.0) {
-                System.out.println("FPS AVG: " + (frames + (1 / player.getDeltaTime()))/2 +
-                        "FPS Count: " + frames +
-                        " FPS Delta: " + (1 / player.getDeltaTime()));
-
-                System.out.println("Player Vel - X : " + player.getPlayerVelocity()[0]
-                        + " Y : " + player.getPlayerVelocity()[1]
-                        + " Z : " + player.getPlayerVelocity()[2]
-                        + " Moving : " + player.getMovingKeyActivated()
-                );
-                frames = 0;
-                lastTime = currentTime;
-            }
+            util.performanceCheck(player);
         }
+        util.provideReport();
     }
 }

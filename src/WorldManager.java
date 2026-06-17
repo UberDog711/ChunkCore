@@ -18,7 +18,7 @@ public class WorldManager {
 
     int chunkSize = Constants.CHUNK_SIZE;
     int renderDistance = Constants.RENDER_DISTANCE;
-
+    Chunk[] chunks = new Chunk[Constants.TOTAL_CHUNKS];
 
 
     private final int lenXZ = 2 * chunkSize * renderDistance;
@@ -46,6 +46,14 @@ public class WorldManager {
     public byte getBlock(int x, int y, int z) {
         return blocks[x][y][z];
     }
+
+    public int getChunk(int x, int z) {
+        int relX = x + renderDistance;
+        int relZ = z + renderDistance;
+        return (relZ * renderDistance * 2) + relX;
+    }
+
+    public Chunk[] getChunks() {return chunks;}
 
     private int solvePos(int pos) {
         int out = pos + ((renderDistance * chunkSize));
@@ -91,7 +99,7 @@ public class WorldManager {
                 int height = (int) (val * val * 127f);
 
                 // Clamp height if necessary
-                 height = (int) (Math.random() * 127);
+                 height = (int) (Math.random() * chunkSize-1);
                 //height = Math.clamp(height, 0, chunkSize - 1);
                 //System.out.println(x + "-" + z);
                 blocks[solvePos(posX)][height][solvePos(posZ)] = 1;
@@ -116,8 +124,25 @@ public class WorldManager {
         }
     }
 
-    public void createWorld() {
+    public void regenerateChunk(int x, int z) {
+        chunks[getChunk(x,z)].create_world(getChunkBlockData(x,z));
+    }
 
+    public void createWorld() {
+        int tot = (int) (Math.pow(renderDistance,2) * 4);
+        int cur = 0;
+        for (int cx = -renderDistance; cx < renderDistance; cx++) {
+            for (int cz = -renderDistance; cz < renderDistance; cz++) {
+                Chunk chunk = new Chunk(cx * Constants.CHUNK_SIZE, cz * Constants.CHUNK_SIZE);
+                chunk.create_world(getChunkBlockData(cx,cz));
+                chunks[getChunk(cx,cz)] = chunk;
+
+                cur ++;
+                System.out.println("Chunk: " + cur + " Out of: " + tot + " Overall: " + (double) cur/tot*100 + "% : Done");
+            }
+        }
+        double end_start_time = glfwGetTime();
+        System.out.println(end_start_time + " : Elapsed to Load");
     }
 
 

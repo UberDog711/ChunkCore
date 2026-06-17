@@ -10,25 +10,50 @@ public class Player {
     private final double[] playerPos = new double[] {0.0f, 0.0f, 0.0f};
     private final double[] playerVel_Per_Second = new double[] {0.0f, 0.0f, 0.0f};
     private final double[] playerRot = new double[] {0.0f, 0.0f};
+
     private double yawRad;
     private double pitchRad;
+
+
     private final long window;
+    private final Util util;
+    private final WorldManager world;
 
     private double deltaTime;
     private double currentTime;
     private double lastFrameTime;
     private double deltaSpeed;
     private boolean movingKeyActivated;
+    private boolean qListener = false;
 
+    public Player (long window, Util util, WorldManager world) {
+        this.window = window;
+        this.util = util;
+        this.world = world;
+    }
 
     public double[] getPlayerPos () {return playerPos;}
+
     public double[] getPlayerRot () {return playerRot;}
+
     public double[] getPlayerVelocity () {return playerVel_Per_Second;}
+
     public double getDeltaTime () {return deltaTime;}
+
     public boolean getMovingKeyActivated() {return movingKeyActivated;}
 
-    public Player (long window) {
-        this.window = window;
+    private boolean listenerAny (int key) {
+        if (glfwGetKey(window, key) == GLFW_PRESS) {
+
+            if (!qListener) {
+                qListener = true;
+                return true;
+
+            }
+            return false;
+        }
+        qListener = false;
+        return false;
     }
 
     public void handleInputs() {
@@ -55,6 +80,9 @@ public class Player {
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
             moveRight();
             movingKeyActivated = true;
+        }
+        if (listenerAny(GLFW_KEY_Q)) {
+           callChunkRegen();
         }
 
         handleMouse(window);
@@ -119,6 +147,14 @@ public class Player {
         playerVel_Per_Second[0] +=  (Math.sin(rightYaw) * deltaSpeed);
         playerVel_Per_Second[2] -=  (Math.cos(rightYaw) * deltaSpeed);
     }
+    private void callChunkRegen () {
+        for (int x = 0; x < Constants.RENDER_DISTANCE/2; x++) {
+            for (int z = 0; z < Constants.RENDER_DISTANCE/2; z++) {
+                util.getRegenTime(world,x,z);
+            }
+        }
 
+        System.out.println("Called Chunk Regen");
+    }
 
 }
