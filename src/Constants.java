@@ -8,7 +8,7 @@ public class Constants {
 
     public final static int HORIZONTAL_CHUNK_SIZE = 256;
     public final static int VERTICAL_CHUNK_SIZE = 3;
-    public final static int RENDER_DISTANCE = 8;
+    public final static int RENDER_DISTANCE = 1;
 
     public final static int TOTAL_CHUNKS = (int) (Math.pow(RENDER_DISTANCE,2) * 4);
 
