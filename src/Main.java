@@ -15,7 +15,7 @@ public class Main {
         init();
         
         loop();
-
+        System.out.println("t");
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
         glfwTerminate();
@@ -38,15 +38,11 @@ public class Main {
 
     private void loop() {
         while (!glfwWindowShouldClose(window)) {
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            glLoadIdentity();
-
-
+            renderer.prepRender();
             player.handleInputs();
-            renderer.loop(world.getChunks(), player.getWireframeStatus());
-
-
-
+            renderer.render3d(
+                    world.getChunks(),
+                    player.getWireframeStatus());
             util.performanceCheck(player);
         }
         util.provideReport();

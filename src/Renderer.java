@@ -1,7 +1,5 @@
 import org.lwjgl.opengl.GL;
 
-import java.util.ArrayList;
-
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_FALSE;
 import static org.lwjgl.glfw.GLFW.glfwCreateWindow;
@@ -15,7 +13,7 @@ public class Renderer {
     private long window;
     private int renderDistance = Constants.RENDER_DISTANCE;
 
-    public Renderer() {
+    public Renderer () {
         if (!glfwInit()) {
             throw new IllegalStateException("Unable to initialize GLFW");
         }
@@ -45,22 +43,40 @@ public class Renderer {
         glfwSwapInterval(0);
     }
 
-    public long getWindowID() {
+    public long getWindowID () {
         return window;
     }
 
-    private void perspectiveGL(double fovY, double aspect, double zNear, double zFar) {
+    private void perspectiveGL (double fovY, double aspect, double zNear, double zFar) {
         double fH = Math.tan(Math.toRadians(fovY / 2)) * zNear;
         double fW = fH * aspect;
         glFrustum(-fW, fW, -fH, fH, zNear, zFar);
     }
-    public void loop(Chunk[] chunks, boolean wireframe) {
+
+    public void render3d (Chunk[] chunks, boolean wireframe) {
         for (int ID = 0; ID < chunks.length; ID++) {
             chunks[ID].render(wireframe);
         }
 
             glfwSwapBuffers(window);
             glfwPollEvents();
+    }
+
+    public void render2d () {
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glMatrixMode(GL_MODELVIEW);
+        glLoadIdentity();
+
+
+        glDisable(GL_DEPTH_TEST);
+
+
+    }
+
+    public void prepRender () {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        glLoadIdentity();
     }
 }
 

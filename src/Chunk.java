@@ -213,6 +213,8 @@ public class Chunk {
 
     glDrawArrays(GL_QUADS, 0, vertex_count);
 
+
+
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisableClientState(GL_COLOR_ARRAY);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
