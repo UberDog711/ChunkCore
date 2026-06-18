@@ -1,21 +1,7 @@
-import java.util.Random;
-
 import static org.lwjgl.glfw.GLFW.glfwGetTime;
 
 
 public class WorldManager {
-
-
-    float scale = 150f;
-    int seed = 0; // base in python pnoise2 base=0
-    int octaves = 2;
-    float persistence = 0.5f;
-    float lacunarity = 0.5f;
-    float amplitude = 1f;
-    float frequency = 1f;
-    float noiseHeight = 0f;
-
-
     int horizontalChunkSize = Constants.HORIZONTAL_CHUNK_SIZE;
     int verticalChunkSize = Constants.VERTICAL_CHUNK_SIZE;
     int renderDistance = Constants.RENDER_DISTANCE;
@@ -48,13 +34,13 @@ public class WorldManager {
         return blocks[x][y][z];
     }
 
+    public Chunk[] getChunks() {return chunks;}
+
     public int getChunk(int x, int z) {
         int relX = x + renderDistance;
         int relZ = z + renderDistance;
         return (relZ * renderDistance * 2) + relX;
     }
-
-    public Chunk[] getChunks() {return chunks;}
 
     private int solvePos(int pos) {
         int out = pos + ((renderDistance * horizontalChunkSize));
@@ -62,49 +48,20 @@ public class WorldManager {
         return out;
     }
 
-    public void generateWorld() {
+    public void generateRandomHeightWorld() {
         int posX;
         int posZ;
+        int posY;
         // 1
         // 2
         for (int x = 0; x < (renderDistance * 2) * (horizontalChunkSize); x++) {
             for (int z = 0; z < (renderDistance * 2) * (horizontalChunkSize); z++) {
                 posX = x - (renderDistance * horizontalChunkSize);
                 posZ = z - (renderDistance * horizontalChunkSize);
-                float baseNoise = 0;
-
-
-                Random rand = new Random(seed);
-                float[] octaveOffsetsX = new float[octaves];
-                float[] octaveOffsetsY = new float[octaves];
-                for (int i = 0; i < octaves; i++) {
-                    octaveOffsetsX[i] = rand.nextFloat() * 20000 - 10000;
-                    octaveOffsetsY[i] = rand.nextFloat() * 20000 - 10000;
+                int maxHeightInc = (int) ((Math.random() * verticalChunkSize));
+                for (posY = 0; posY <= maxHeightInc; posY++) {
+                    blocks[solvePos(posX)][posY][solvePos(posZ)] = 1;
                 }
-
-                for (int o = 0; o < octaves; o++) {
-                    float sampleX = (posX / scale) * frequency + octaveOffsetsX[o];
-                    float sampleZ = (posZ / scale) * frequency + octaveOffsetsY[o];
-                    float perlinValue = PerlinNoise.perlin(sampleX, sampleZ) * 2f - 1f;
-                    noiseHeight += perlinValue * amplitude;
-
-                    amplitude *= persistence;
-                    frequency *= lacunarity;
-                }
-                baseNoise = noiseHeight;
-
-
-                float val = 1f + baseNoise;
-
-
-                int height = (int) (val * val * 127f);
-
-                // Clamp height if necessary
-                 height = (int) (Math.random() * verticalChunkSize -1);
-                //height = Math.clamp(height, 0, chunkSize - 1);
-                //System.out.println(x + "-" + z);
-                blocks[solvePos(posX)][height][solvePos(posZ)] = 1;
-
             }
         }
     }

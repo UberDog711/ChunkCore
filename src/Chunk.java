@@ -10,23 +10,20 @@ import org.lwjgl.BufferUtils;
 public class Chunk {
 
 // VARIABLES
-    private int x, z;
-    private ArrayList<Vector3> vertex_data = new ArrayList<>();
-    private final ArrayList<float[]> color_data = new ArrayList<>();
-    private int vbo_id, cbo_id, vertex_count;
+    private final int x;
+    private final int z;
+    private final ArrayList<Vector3> vertex_data;
+    private final ArrayList<float[]> color_data;
+    private int vbo_id;
+    private int cbo_id;
+    private int vertex_count;
 
-    int horizontalChunkSize = Constants.HORIZONTAL_CHUNK_SIZE;
-    private int verticalChunkSize = Constants.VERTICAL_CHUNK_SIZE;
+    private final int horizontalChunkSize;
+    private final int verticalChunkSize;
+    private final int wireframeLineWidth;
 
-
-    private int[][] offsets;
-    // Origin - All except Y
-
-    private int[][][] verticesOffsets;
-
-
-
-
+    private final int[][] offsets;
+    private final int[][][] verticesOffsets;
 
 
     public Chunk(int x, int z) {
@@ -56,6 +53,11 @@ public class Chunk {
                 // Back
                 {{0,0,0}, {0,-1,0}, {1,-1,0}, {1,0,0}}
         };
+        verticalChunkSize = Constants.VERTICAL_CHUNK_SIZE;
+        horizontalChunkSize = Constants.HORIZONTAL_CHUNK_SIZE;
+        wireframeLineWidth = Constants.WIREFRAME_LINE_WIDTH;
+        vertex_data = new ArrayList<>();
+        color_data = new ArrayList<>();
     }
 // CREATES FACE COLORS
     private float[] face_color(int face_num, int block_type) {
@@ -112,23 +114,6 @@ public class Chunk {
             out[i * 3 + 2] = data.get(i)[2];
         }
         return out;
-    }
-//FLATTENS BLOCK DATA
-    public int packPos(int x, int y, int z) {
-        return (x & 0x7F)       // bits 0-5
-            | ((y & 0x7F) << 7)  // bits 6-11
-            | ((z & 0x7F) << 14); // bits 12-17
-
-    }
-// UNFLATTENS BLOCK DATA
-    public int getX(int packed) {
-        return packed & 0x7F;
-    }
-    public int getY(int packed) {
-        return (packed >> 7) & 0x7F;
-    }
-    public int getZ(int packed) {
-        return (packed >> 14) & 0x7F;
     }
 // CREATES CHUNK
     public void create_world(byte[][][] blocks) {
@@ -221,7 +206,7 @@ public class Chunk {
 
     if (wireframe) {
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-        glLineWidth(1);
+        glLineWidth(wireframeLineWidth);
     } else {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }

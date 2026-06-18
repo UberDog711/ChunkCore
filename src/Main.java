@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -27,7 +26,7 @@ public class Main {
         util = new Util();
         window = renderer.getWindowID();
         world = new WorldManager();
-        world.generateWorld();
+        world.generateRandomHeightWorld();
         world.createWorld();
 
         player = new Player(window, util, world);
@@ -44,7 +43,7 @@ public class Main {
 
 
             player.handleInputs();
-            renderer.loop(world.getChunks());
+            renderer.loop(world.getChunks(), player.getWireframeStatus());
 
 
 

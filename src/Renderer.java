@@ -54,13 +54,10 @@ public class Renderer {
         double fW = fH * aspect;
         glFrustum(-fW, fW, -fH, fH, zNear, zFar);
     }
-    public void loop(Chunk[] chunks) {
+    public void loop(Chunk[] chunks, boolean wireframe) {
         for (int ID = 0; ID < chunks.length; ID++) {
-            chunks[ID].render(false);
+            chunks[ID].render(wireframe);
         }
-//        for (Chunk chunk : chunks) {
-//            chunk.render(false);
-//        }
 
             glfwSwapBuffers(window);
             glfwPollEvents();

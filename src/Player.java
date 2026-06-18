@@ -1,3 +1,7 @@
+import Tools.ListenerAny;
+
+import java.net.http.WebSocket;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_A;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_D;
@@ -24,12 +28,18 @@ public class Player {
     private double lastFrameTime;
     private double deltaSpeed;
     private boolean movingKeyActivated;
-    private boolean qListener = false;
+    private boolean wireframe;
+
+    private ListenerAny qListener;
+    private ListenerAny eListener;
+
 
     public Player (long window, Util util, WorldManager world) {
         this.window = window;
         this.util = util;
         this.world = world;
+        qListener = new ListenerAny(window,GLFW_KEY_Q);
+        eListener = new ListenerAny(window,GLFW_KEY_E);
     }
 
     public double[] getPlayerPos () {return playerPos;}
@@ -40,29 +50,17 @@ public class Player {
 
     public double getDeltaTime () {return deltaTime;}
 
-    public boolean getMovingKeyActivated() {return movingKeyActivated;}
+    public boolean getMovingKeyActivated () {return movingKeyActivated;}
 
-    private boolean listenerAny (int key) {
-        if (glfwGetKey(window, key) == GLFW_PRESS) {
+    public boolean getWireframeStatus () {return wireframe;}
 
-            if (!qListener) {
-                qListener = true;
-                return true;
-
-            }
-            return false;
-        }
-        qListener = false;
-        return false;
-    }
-
-    public void handleInputs() {
+    public void handleInputs () {
         currentTime = glfwGetTime();
         deltaTime = currentTime - lastFrameTime;
         lastFrameTime = currentTime;
         deltaSpeed = (deltaTime * Constants.ACCELERATION_SPEED);
         yawRad = Math.toRadians(playerRot[0]);
-        pitchRad = 0;//Math.toRadians(playerRot[1]);
+        pitchRad = Math.toRadians(playerRot[1]);
         movingKeyActivated = false;
 
         if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
@@ -81,8 +79,11 @@ public class Player {
             moveRight();
             movingKeyActivated = true;
         }
-        if (listenerAny(GLFW_KEY_Q)) {
+        if (qListener.getStatus()) {
            callChunkRegen();
+        }
+        if (eListener.getStatus()) {
+            flipWireframe();
         }
 
         handleMouse(window);
@@ -90,8 +91,9 @@ public class Player {
         for (int i = 0; i < 3; i++) {
             playerVel_Per_Second[i] = Math.clamp(playerVel_Per_Second[i],-Constants.MAX_MOVEMENT_SPEED,Constants.MAX_MOVEMENT_SPEED);
             if (!movingKeyActivated) {
-                playerVel_Per_Second[i] *= (1-(Constants.DECELERATION_SPEED * deltaTime));
-                if (Math.abs(playerVel_Per_Second[i]) < 0.25) playerVel_Per_Second[i] = 0;
+                playerVel_Per_Second[i] = 0;
+//                playerVel_Per_Second[i] *= (1-(Constants.DECELERATION_SPEED * deltaTime));
+//                if (Math.abs(playerVel_Per_Second[i]) < 0.25) playerVel_Per_Second[i] = 0;
             }
             playerPos[i] += (float) ((playerVel_Per_Second[i]) * deltaTime);
         }
@@ -127,6 +129,7 @@ public class Player {
 
     }
 
+
     private void moveForward () {
         playerVel_Per_Second[0] +=  (Math.sin(yawRad) * deltaSpeed);
         playerVel_Per_Second[1] -=  (Math.tan(pitchRad) * deltaSpeed);
@@ -147,14 +150,14 @@ public class Player {
         playerVel_Per_Second[0] +=  (Math.sin(rightYaw) * deltaSpeed);
         playerVel_Per_Second[2] -=  (Math.cos(rightYaw) * deltaSpeed);
     }
+    private void flipWireframe () {
+        wireframe = !wireframe;
+    }
     private void callChunkRegen () {
         for (int x = 0; x < Constants.RENDER_DISTANCE/2; x++) {
             for (int z = 0; z < Constants.RENDER_DISTANCE/2; z++) {
                 util.getRegenTime(world,x,z);
             }
         }
-
-        System.out.println("Called Chunk Regen");
     }
-
 }
