@@ -60,7 +60,7 @@ public class Chunk {
         color_data = new ArrayList<>();
     }
 // CREATES FACE COLORS
-    private float[] face_color(int face_num, int block_type) {
+    private float[] face_color (int face_num, int block_type) {
         float[] out = new float[3];
         float baseR;
         float baseG;
@@ -95,7 +95,7 @@ public class Chunk {
         return out;
     }
 // FLATTENS VERTEX DATA
-    private float[] flattenVertexData(ArrayList<Vector3> data) {
+    private float[] flattenVertexData (ArrayList<Vector3> data) {
         float[] flat = new float[data.size() * 3];
         for (int i = 0; i < data.size(); i++) {
             Vector3 v = data.get(i);
@@ -106,7 +106,7 @@ public class Chunk {
         return flat;
     }
 // FLATTENS COLOR DATA
-    private float[] flattenColorData(ArrayList<float[]> data) {
+    private float[] flattenColorData (ArrayList<float[]> data) {
         float[] out = new float[data.size() * 3];
         for (int i = 0; i < data.size(); i++) {
             out[i * 3] = data.get(i)[0];
@@ -115,8 +115,12 @@ public class Chunk {
         }
         return out;
     }
-// CREATES CHUNK
-    public void create_world(byte[][][] blocks) {
+    public void createChunk (byte[][][] blocks) {
+        createMesh(blocks);
+        uploadBuffers();
+    }
+
+    public void createMesh (byte[][][] blocks) {
         byte val;
 
 
@@ -172,12 +176,15 @@ public class Chunk {
         }
 
 
+
+    }
+
+    public void uploadBuffers () {
         float[] flat_vertices = flattenVertexData(vertex_data);
         float[] flat_colors = flattenColorData(color_data);
-
         vertex_data.clear();
         color_data.clear();
-        
+
         vertex_count = flat_vertices.length / 3;
 
         vbo_id = glGenBuffers();
@@ -194,8 +201,8 @@ public class Chunk {
 
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
-// REMDERS CHUNK
-   public void render(boolean wireframe) {
+
+   public void render (boolean wireframe) {
     glEnableClientState(GL_VERTEX_ARRAY);
     glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
     glVertexPointer(3, GL_FLOAT, 0, 0L);

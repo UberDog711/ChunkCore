@@ -15,7 +15,7 @@ public class Main {
         init();
         
         loop();
-        System.out.println("t");
+
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
         glfwTerminate();

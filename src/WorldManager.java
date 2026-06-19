@@ -83,7 +83,7 @@ public class WorldManager {
     }
 
     public void regenerateChunk(int x, int z) {
-        chunks[getChunk(x,z)].create_world(getChunkBlockData(x,z));
+        chunks[getChunk(x,z)].createChunk(getChunkBlockData(x,z));
     }
 
     public void createWorld() {
@@ -92,7 +92,7 @@ public class WorldManager {
         for (int cx = -renderDistance; cx < renderDistance; cx++) {
             for (int cz = -renderDistance; cz < renderDistance; cz++) {
                 Chunk chunk = new Chunk(cx * Constants.HORIZONTAL_CHUNK_SIZE, cz * Constants.HORIZONTAL_CHUNK_SIZE);
-                chunk.create_world(getChunkBlockData(cx,cz));
+                chunk.createChunk(getChunkBlockData(cx,cz));
                 chunks[getChunk(cx,cz)] = chunk;
 
                 cur ++;
