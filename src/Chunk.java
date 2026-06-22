@@ -8,8 +8,6 @@ import static org.lwjgl.opengl.GL15.*;
 import org.lwjgl.BufferUtils;
 
 public class Chunk {
-
-// VARIABLES
     private final int x;
     private final int z;
     private final ArrayList<Vector3> vertex_data;
@@ -65,14 +63,20 @@ public class Chunk {
         float baseR;
         float baseG;
         float baseB;
-        if (block_type == 1) { // Grass
-            baseR = 35f/255;
-            baseG = 74f/255f;
-            baseB = 57f/255f;
-        } else { // Example
-            baseR = 30f/255;
-            baseG = 70f/255f;
-            baseB = 40f/255f;
+        if (block_type == Constants.Blocks.GRASS_BLOCK_ID) {
+            if (face_num == Constants.Blocks.TOP_BLOCK_ID) {
+                baseR = Constants.Blocks.GRASS_TOP_RGB[0];
+                baseG = Constants.Blocks.GRASS_TOP_RGB[1];
+                baseB = Constants.Blocks.GRASS_TOP_RGB[2];
+            } else {
+                baseR = Constants.Blocks.GRASS_SIDES_RGB[0];
+                baseG = Constants.Blocks.GRASS_SIDES_RGB[1];
+                baseB = Constants.Blocks.GRASS_SIDES_RGB[2];
+            }
+        } else {
+            baseR = Constants.Blocks.DEFAULT_ALL_RGB[0];
+            baseG = Constants.Blocks.DEFAULT_ALL_RGB[1];
+            baseB = Constants.Blocks.DEFAULT_ALL_RGB[2];
         }
 
         // Brightness multipliers per face

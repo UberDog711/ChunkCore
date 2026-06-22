@@ -19,6 +19,7 @@ public class Main {
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
         glfwTerminate();
+        util.provideReport();
     }
 
     private void init() {
@@ -45,6 +46,5 @@ public class Main {
                     player.getWireframeStatus());
             util.performanceCheck(player);
         }
-        util.provideReport();
     }
 }

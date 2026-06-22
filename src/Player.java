@@ -30,8 +30,8 @@ public class Player {
     private boolean movingKeyActivated;
     private boolean wireframe;
 
-    private ListenerAny qListener;
-    private ListenerAny eListener;
+    private final ListenerAny qListener;
+    private final ListenerAny eListener;
 
 
     public Player (long window, Util util, WorldManager world) {
