@@ -26,14 +26,10 @@ public class Main {
         renderer = new Renderer();
         util = new Util();
         window = renderer.getWindowID();
-        world = new WorldManager();
+        world = new WorldManager(util);
         world.generateRandomHeightWorld();
         world.createWorld();
-
         player = new Player(window, util, world);
-
-
-
     }
 
 

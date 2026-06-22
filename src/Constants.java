@@ -1,16 +1,20 @@
 public class Constants {
-    public final static int RESOLUTION_X = 1920;
-    public final static int RESOLUTION_Y = 1080;
+    public final static int RESOLUTION_X = 2*1920;
+    public final static int RESOLUTION_Y = 2*1080;
     public final static float SENSITIVITY = 0.10f;
     public final static double FOV = 115;
 
     public final static int HORIZONTAL_CHUNK_SIZE = 128;
-    public final static int VERTICAL_CHUNK_SIZE = 10;
-    public final static int RENDER_DISTANCE = 4;
+    public final static int VERTICAL_CHUNK_SIZE = 64;
+    public final static int RENDER_DISTANCE = 2;
     public final static int WIREFRAME_LINE_WIDTH = 3;
 
 
-    public final static int TOTAL_CHUNKS = (int) (Math.pow(RENDER_DISTANCE,2) * 4);
+    public final static int CHUNK_COUNT = (int) (Math.pow(RENDER_DISTANCE,2) * 4);
+    public final static int CUBIC_CHUNK_BLOCK_COUNT =
+            HORIZONTAL_CHUNK_SIZE *
+            HORIZONTAL_CHUNK_SIZE *
+            VERTICAL_CHUNK_SIZE;
 
     public final static double MAX_MOVEMENT_SPEED = 64;
     public final static double ACCELERATION_SPEED = 32;

@@ -5,13 +5,18 @@ public class WorldManager {
     int horizontalChunkSize = Constants.HORIZONTAL_CHUNK_SIZE;
     int verticalChunkSize = Constants.VERTICAL_CHUNK_SIZE;
     int renderDistance = Constants.RENDER_DISTANCE;
-    Chunk[] chunks = new Chunk[Constants.TOTAL_CHUNKS];
+    Chunk[] chunks = new Chunk[Constants.CHUNK_COUNT];
+    Util util;
+
 
 
     private final int lenXZ = 2 * horizontalChunkSize * renderDistance;
     private final int halfLenXZ = lenXZ / 2;
     private final byte[][][] blocks = new byte[lenXZ][verticalChunkSize][lenXZ];
 
+    public WorldManager (Util util) {
+        this.util = util;
+    }
 
     public byte[][][] getChunkBlockData(int chunkX, int chunkZ) {
         byte[][][] out = new byte[horizontalChunkSize][horizontalChunkSize][horizontalChunkSize];
@@ -26,7 +31,6 @@ public class WorldManager {
                 }
             }
         }
-
         return out;
     }
 
@@ -43,9 +47,7 @@ public class WorldManager {
     }
 
     private int solvePos(int pos) {
-        int out = pos + ((renderDistance * horizontalChunkSize));
-
-        return out;
+        return pos + ((renderDistance * horizontalChunkSize));
     }
 
     public void generateRandomHeightWorld() {
@@ -89,6 +91,7 @@ public class WorldManager {
     public void createWorld() {
         int tot = (int) (Math.pow(renderDistance,2) * 4);
         int cur = 0;
+        util.beginChunkGen();
         for (int cx = -renderDistance; cx < renderDistance; cx++) {
             for (int cz = -renderDistance; cz < renderDistance; cz++) {
                 Chunk chunk = new Chunk(cx * Constants.HORIZONTAL_CHUNK_SIZE, cz * Constants.HORIZONTAL_CHUNK_SIZE);
@@ -99,9 +102,8 @@ public class WorldManager {
                 System.out.println("Chunk: " + cur + " Out of: " + tot + " Overall: " + (double) cur/tot*100 + "% : Done");
             }
         }
+        util.endChunkGen();
         double end_start_time = glfwGetTime();
         System.out.println(end_start_time + " : Elapsed to Load");
     }
-
-
 }
