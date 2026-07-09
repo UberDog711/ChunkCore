@@ -1,203 +1,32 @@
 
-
-| Face Name  | Common Number |
-| ---------- | ------------- |
-| **Top**    | 0             |
-| **Bottom** | 1             |
-| **Left**   | 2             |
-| **Right**  | 3             |
-| **Front**  | 4             |
-| **Back**   | 5             |
-
-| Block      | Common Number |
-| ---------- | ------------- |
-| **Grass**  | 0             |
-| **Bottom** | 1             |
-| **Left**   | 2             |
-| **Right**  | 3             |
-| **Front**  | 4             |
-| **Back**   | 5             |
+0 Top
+1 Bottom
+2 Left
+3 Right
+4 Front
+5 Back
 
 
+Structure:
++ Mean Changes
 
 
+src
+    GameManager + (keep addition limited instead relly on calls to classes helpers)
+    Main + (accomplish this all without adding more clutter)
+    Constants + (keep minimal)
+    tools
+        ListenerAny
+    player
+        Player + (make it store pos but get changes from actions)
+        InputManager + (isolate from player to just call actions)
+        Actions + (compute the affect all action have such as movement)
+    world
+        Chunk + (adapt to new data structure)
+            Vector3 + (remove and use arrays)
+        WorldManager + (bit manipulable to store data)
+    render
+        Renderer + (put gl calls to move internally)
+    reporting
+        Util + (write data to csv file)
 
-
-
-
-
-Java Syntax
-===============================
- Java Method (Function) Syntax
-===============================
-
-Basic Syntax:
--------------
-[access modifier] [return type] [method name]([parameters]) {
-    // method body
-}
-
-Example:
---------
-public void greet(String name) {
-    System.out.println("Hello, " + name);
-}
-
-Breakdown:
-----------
-
-1. Access Modifier:
-   -----------------
-   Controls who can call the method.
-
-   public      - Accessible from anywhere
-   private     - Accessible only within the same class
-   protected   - Accessible in same package or subclasses
-   (no keyword) - Accessible within the same package only
-
-2. Return Type:
-   -------------
-   Declares what type of value the method returns.
-
-   void        - No return value
-   int         - Returns an integer
-   String      - Returns a text string
-   boolean     - Returns true or false
-   ...etc.
-
-3. Method Name:
-   --------------
-   The name you give the method (e.g., greet, run, startGame)
-
-4. Parameters:
-   ------------
-   Values passed into the method. Each has a type and name.
-
-   Example: String name
-   You can have multiple, separated by commas:
-   Example: int x, int y
-
-5. Method Body:
-   -------------
-   The code inside { ... } that runs when the method is called.
-
---------------------------------------------------------
-
-Example from a real Java program:
-
-private void init() {
-    // Set up a game window here
-}
-
-Explanation:
-- 'private' = only this class can access it
-- 'void' = it doesn't return anything
-- 'init' = the method name
-- '()' = takes no parameters
-- '{ ... }' = the code that runs
-
---------------------------------------------------------
-
-Quick Summary:
-
-[access modifier] [return type] [method name]([parameters]) {
-    // what the method does
-}
-
-Example:
-
-public int add(int a, int b) {
-    return a + b;
-}
-
-This method is public, returns an int, and takes two int parameters.
-
-========================================================
-
-
-JAVA CRASH COURSE - OBJECTS & LISTS  
-by Sigma Alpha Rizzler Lord The IIIV
-
-----------------------------------------------
-1️⃣ OBJECTS
-
-- An object is an instance of a class.
-- A class is a blueprint. Objects are built from the blueprint.
-
-Example Class:
-public class InputHandler {
-    String name;
-    int health;
-
-    public void printStatus() {
-        System.out.println(name + " has " + health + " health.");
-    }
-}
-
-Creating an Object:
-InputHandler p1 = new InputHandler();
-p1.name = "Sigma Alpha Rizzler Lord The IIIV";
-p1.health = 100;
-p1.printStatus();  // Output: Sigma Alpha Rizzler Lord The IIIV has 100 health.
-
-- Multiple objects can be created from one class.
-----------------------------------------------
-2️⃣ LISTS (ArrayList)
-
-- A list is a collection of elements.
-- ArrayList is a dynamic array that grows and shrinks.
-
-Import:
-import java.util.ArrayList;
-
-Creating a List:
-ArrayList<String> names = new ArrayList<>();
-
-Adding to List:
-names.add("James");
-names.add("Sigma");
-names.add("Lord");
-
-Accessing Elements:
-System.out.println(names.get(0));  // Output: James
-
-Looping Through List:
-for (String name : names) {
-    System.out.println(name);
-}
-
-----------------------------------------------
-3️⃣ LIST OF OBJECTS
-
-- You can store objects inside a list.
-
-Example:
-
-ArrayList<InputHandler> players = new ArrayList<>();
-
-InputHandler p1 = new InputHandler();
-p1.name = "Rizzler";
-p1.health = 100;
-
-InputHandler p2 = new InputHandler();
-p2.name = "Sigma";
-p2.health = 150;
-
-players.add(p1);
-players.add(p2);
-
-Loop:
-for (InputHandler p : players) {
-    p.printStatus();
-}
-
----------------------------------------------- 
-🧠 SUMMARY 
-
-- Object = Instance of a class.
-- Class = Blueprint for creating objects.
-- List = Collection of elements.
-- ArrayList = Most common list type in Java.
-
-----------------------------------------------
-- Sigma Alpha Rizzler Lord The IIIV
