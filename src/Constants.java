@@ -5,7 +5,7 @@ public class Constants {
     public final static double FOV = 115;
 
     public final static int HORIZONTAL_CHUNK_SIZE = 128;
-    public final static int VERTICAL_CHUNK_SIZE = 64;
+    public final static int VERTICAL_CHUNK_SIZE = 32;
     public final static int RENDER_DISTANCE = 2;
     public final static int WIREFRAME_LINE_WIDTH = 3;
 
