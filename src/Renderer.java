@@ -10,7 +10,7 @@ import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 public class Renderer {
-    private long window;
+    private final long window;
     private int renderDistance = Constants.RENDER_DISTANCE;
 
     public Renderer () {
@@ -37,8 +37,8 @@ public class Renderer {
         glClearColor(Constants.R_SKY_COLOR, Constants.G_SKY_COLOR, Constants.B_SKY_COLOR, 1.0f); // sky color
         glMatrixMode(GL_PROJECTION);
         glLoadIdentity();
-        float aspect = Constants.RESOLUTION_X / Constants.RESOLUTION_Y;
-        perspectiveGL(Constants.FOV, aspect, 0.1f, 4800.0f);
+        float aspect = (float) Constants.RESOLUTION_X / Constants.RESOLUTION_Y;
+        perspectiveGL(aspect, 0.1f, 4800.0f);
         glMatrixMode(GL_MODELVIEW);
         glfwSwapInterval(0);
     }
@@ -47,8 +47,8 @@ public class Renderer {
         return window;
     }
 
-    private void perspectiveGL (double fovY, double aspect, double zNear, double zFar) {
-        double fH = Math.tan(Math.toRadians(fovY / 2)) * zNear;
+    private void perspectiveGL (double aspect, double zNear, double zFar) {
+        double fH = Math.tan(Math.toRadians(Constants.FOV / 2)) * zNear;
         double fW = fH * aspect;
         glFrustum(-fW, fW, -fH, fH, zNear, zFar);
     }
@@ -77,6 +77,10 @@ public class Renderer {
     public void prepRender () {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         glLoadIdentity();
+    }
+
+    public boolean shouldWindowClose() {
+        return !glfwWindowShouldClose(window);
     }
 }
 

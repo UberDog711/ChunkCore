@@ -14,8 +14,10 @@ public class WorldManager {
     private final int halfLenXZ = lenXZ / 2;
     private final byte[][][] blocks = new byte[lenXZ][verticalChunkSize][lenXZ];
 
-    public WorldManager (Util util) {
-        this.util = util;
+    public WorldManager () {
+        this.util = GameManager.utilToolkit;
+        this.generateRandomHeightWorld();
+        this.createWorld();
     }
 
     public byte[][][] getChunkBlockData(int chunkX, int chunkZ) {

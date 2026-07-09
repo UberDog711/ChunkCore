@@ -29,12 +29,12 @@ public class Util {
         chunkRegenTimes.add(glfwGetTime() - startTime);
     }
 
-    public void performanceCheck(Player player) {
+    public void performanceCheck(InputHandler inputHandler) {
         frames++;
         double currentTime = glfwGetTime();
         if (currentTime - lastTime >= 1.0) {
             if (fpsReporting) {
-                double fpsDelta = (1 / player.getDeltaTime());
+                double fpsDelta = (1 / inputHandler.getDeltaTime());
                 double fpsAVG = (frames + fpsDelta)/2;
                 System.out.println("FPS AVG: " + fpsAVG +
                         "FPS Count: " + frames +
@@ -43,10 +43,10 @@ public class Util {
             }
 
             if (velocityReporting) {
-                System.out.println("Player Vel - X : " + player.getPlayerVelocity()[0]
-                        + " Y : " + player.getPlayerVelocity()[1]
-                        + " Z : " + player.getPlayerVelocity()[2]
-                        + " Moving Activated: " + player.getMovingKeyActivated()
+                System.out.println("Player Vel - X : " + inputHandler.getPlayerVelocity()[0]
+                        + " Y : " + inputHandler.getPlayerVelocity()[1]
+                        + " Z : " + inputHandler.getPlayerVelocity()[2]
+                        + " Moving Activated: " + inputHandler.getMovingKeyActivated()
                 );
             }
             frames = 0;

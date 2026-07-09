@@ -36,7 +36,7 @@ git add filename.java (stages a specific file)
 - Commits are your save points.
 
 Example:
-git commit -m "Implemented player movement"
+git commit -m "Implemented inputHandler movement"
 
 ----------------------------------------------
 5) git push origin main

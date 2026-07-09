@@ -1,14 +1,13 @@
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 
 public class Main {
-    private long window;
-    private Player player;
+    private GameManager gameManager;
+    private InputHandler inputHandler;
     private WorldManager world;
     private Renderer renderer;
     private Util util;
-
+    private Player player;
 
 
     public void main() {
@@ -16,31 +15,43 @@ public class Main {
         
         loop();
 
-        glfwFreeCallbacks(window);
-        glfwDestroyWindow(window);
+        glfwFreeCallbacks(GameManager.windowID);
+        glfwDestroyWindow(GameManager.windowID);
         glfwTerminate();
         util.provideReport();
     }
 
     private void init() {
+        // Needs Nothing
+        gameManager = new GameManager();
         renderer = new Renderer();
         util = new Util();
-        window = renderer.getWindowID();
-        world = new WorldManager(util);
-        world.generateRandomHeightWorld();
-        world.createWorld();
-        player = new Player(window, util, world);
+
+        gameManager.init(util,
+                renderer.getWindowID(),
+                world,
+                player,
+                inputHandler
+        );
+
+
+        world = new WorldManager();
+        inputHandler = new InputHandler();
+
+
+
+
     }
 
 
     private void loop() {
-        while (!glfwWindowShouldClose(window)) {
+        while (renderer.shouldWindowClose()) {
             renderer.prepRender();
-            player.handleInputs();
+            inputHandler.handleInputs();
             renderer.render3d(
                     world.getChunks(),
-                    player.getWireframeStatus());
-            util.performanceCheck(player);
+                    inputHandler.getWireframeStatus());
+            util.performanceCheck(inputHandler);
         }
     }
 }

@@ -125,7 +125,7 @@ by Sigma Alpha Rizzler Lord The IIIV
 - A class is a blueprint. Objects are built from the blueprint.
 
 Example Class:
-public class Player {
+public class InputHandler {
     String name;
     int health;
 
@@ -135,7 +135,7 @@ public class Player {
 }
 
 Creating an Object:
-Player p1 = new Player();
+InputHandler p1 = new InputHandler();
 p1.name = "Sigma Alpha Rizzler Lord The IIIV";
 p1.health = 100;
 p1.printStatus();  // Output: Sigma Alpha Rizzler Lord The IIIV has 100 health.
@@ -173,13 +173,13 @@ for (String name : names) {
 
 Example:
 
-ArrayList<Player> players = new ArrayList<>();
+ArrayList<InputHandler> players = new ArrayList<>();
 
-Player p1 = new Player();
+InputHandler p1 = new InputHandler();
 p1.name = "Rizzler";
 p1.health = 100;
 
-Player p2 = new Player();
+InputHandler p2 = new InputHandler();
 p2.name = "Sigma";
 p2.health = 150;
 
@@ -187,7 +187,7 @@ players.add(p1);
 players.add(p2);
 
 Loop:
-for (Player p : players) {
+for (InputHandler p : players) {
     p.printStatus();
 }
 
